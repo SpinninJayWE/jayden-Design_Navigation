@@ -22,7 +22,7 @@ function App() {
   };
 
   return (
-      <div className={'h-full flex '}>
+      <div className={'h-full flex gap-3 bg-[#F4F4F4]'}>
         <SideBar />
         <div className={'flex-1'}>
           <TopBar />

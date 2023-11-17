@@ -51,6 +51,8 @@ export const TreeItem: React.FC<TreeItemProps> = React.memo(({ node, level }) =>
     }
   };
 
+  const textColorClass = isSelected? 'text-white' : ''
+
   return (
       <>
         <ListItem
@@ -58,14 +60,16 @@ export const TreeItem: React.FC<TreeItemProps> = React.memo(({ node, level }) =>
             onClick={handleSelect}
             selected={isSelected}
             sx={{
-              paddingLeft: (level + 1) * 16 + 'px',
+              paddingLeft: (level + 1) * 16 + 'px'
             }}
-            style={{ backgroundColor: (isSelected && (!node.children || node.children.length === 0)) ? '#e0f7fa' : 'inherit' }} // 当节点被选中时改变背景色
+            style={{ backgroundColor: (isSelected) ? '#4F8EA4' : 'inherit' }} // 当节点被选中时改变背景色
         >
           {node.icon && <ListItemIcon sx={{
-            minWidth: '30px',
-          }}>{node.icon}</ListItemIcon>}
-          <ListItemText primary={node.title} />
+            minWidth: '32px',
+          }} className={`${textColorClass}`}>{node.icon}</ListItemIcon>}
+          <ListItemText className={`text-sm ${textColorClass}`}>
+            {node.title}
+          </ListItemText>
           {node.children ? (open ? <ExpandLess /> : <ExpandMore />) : null}
         </ListItem>
         {node.children && node.children.length && (
