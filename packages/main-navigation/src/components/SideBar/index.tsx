@@ -1,10 +1,10 @@
 import {css} from "@emotion/react";
-import {Avatar, Box, Divider, List} from "@mui/material";
+import {Avatar, Box, Divider} from "@mui/material";
 import JayLogo from "../../assets/Jay.png";
 import React from "react";
-import {Tree, TreeItem, TreeNode} from "../TreeList";
+import {Tree, TreeNode} from "../TreeList";
 import {Dashboard, Explore, Forum, LibraryMusic, LocalMall, LocalPlay} from "@mui/icons-material";
-
+import { useNavigate } from 'react-router-dom'
 export const SideBar = () => {
   const style = css`
     width: 200px;
@@ -18,6 +18,7 @@ export const SideBar = () => {
     },
     {
       key: '2',
+      path: '/blog',
       title: 'Blog',
       icon: <Forum />,
     },
@@ -50,6 +51,8 @@ export const SideBar = () => {
     },
   ];
 
+  const nav = useNavigate()
+
   return (
       <Box css={style} className={`pb-4 overflow-y-scroll`}>
         <div className={'flex items-center pl-4 h-[80px]'}>
@@ -57,7 +60,9 @@ export const SideBar = () => {
           <span className={'pl-2 text-xl blod'}>Jay Design</span>
         </div>
         <Divider />
-        <Tree treeData={treeData}/>
+        <Tree onNodeSelect={(node) => {
+          nav('/' + node.path)
+        }} treeData={treeData}/>
         <Divider />
       </Box>
   );
