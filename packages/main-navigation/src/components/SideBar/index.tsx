@@ -8,19 +8,20 @@ import { useNavigate } from 'react-router-dom'
 export const SideBar = () => {
   const style = css`
     width: 200px;
-    background: white;
+    background: #FAFAFA;
   `
   const treeData: TreeNode[] = [
     {
       key: '1',
-      title: 'Overview',
+      title: 'Dashboard',
       icon: <Dashboard />,
+      path: '/'
     },
     {
       key: '2',
-      path: '/blog',
       title: 'Blog',
       icon: <Forum />,
+      path: '/blog'
     },
     {
       key: '9',
@@ -55,13 +56,16 @@ export const SideBar = () => {
 
   return (
       <Box css={style} className={`pb-4 overflow-y-scroll`}>
-        <div className={'flex items-center pl-4 h-[80px]'}>
+        <div className={'flex items-center pl-3.5 h-[80px]'}>
           <Avatar className={'h-[60px]'} alt="Remy Sharp" src={JayLogo} />
-          <span className={'pl-2 text-xl blod'}>Jay Design</span>
+          <span className={'pl-2 text-xl font-bold'}>Jay Design</span>
         </div>
         <Divider />
         <Tree onNodeSelect={(node) => {
-          nav('/' + node.path)
+          if (node.path) {
+            // 确保路径以单个斜杠开始
+            nav(node.path);
+          }
         }} treeData={treeData}/>
         <Divider />
       </Box>

@@ -1,14 +1,15 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import { css } from '@emotion/react';
 import TopBar from './components/TopBar';
 import SideBar from './components/SideBar';
-import { Outlet } from 'react-router-dom' 
+import { Outlet } from 'react-router-dom'
+import {Skeleton} from "@mui/material";
 
 const Content: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const style = css`
 		height: calc(100% - 80px);
 	`;
-	return <div css={style} className={`p-4 overflow-y-scroll`}>
+	return <div css={style} className={`p-4 pl-0 overflow-y-scroll`}>
     {children}
   </div>;
 };
@@ -16,12 +17,14 @@ const Content: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 function App() {
 	return (
-		<div className={'h-full flex gap-3 bg-[#F4F4F4]'}>
+		<div className={`h-full flex gap-10 bg-[#EFF3F4]`}>
 			<SideBar />
 			<div className={'flex-1'}>
 				<TopBar />
 				<Content>
-					<Outlet /> {/* 使用 Outlet 组件 */}
+					<Suspense fallback={<Skeleton animation={'wave'} variant="rounded" height={420} />}>
+						<Outlet /> {/* 使用 Outlet 组件 */}
+					</Suspense>
 				</Content>
 			</div>
 		</div>

@@ -7,7 +7,7 @@ import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import {ListItemIcon} from "@mui/material";
 
 interface TreeProviderProps {
-  selectedNode: TreeNode | null;
+  selectedNode: TreeNode | null | undefined;
   handleNodeToggle: (node: TreeNode) => void;
   handleNodeSelect: (node: TreeNode) => void;
 }
@@ -24,6 +24,7 @@ export interface TreeNode {
   key: React.Key;
   children?: TreeNode[]; // 可选的子节点数组
   icon?: ReactNode; // 可选的图标
+  path?: string
 }
 
 // 定义 TreeItem 的属性类型
@@ -64,10 +65,15 @@ export const TreeItem: React.FC<TreeItemProps> = React.memo(({ node, level }) =>
             }}
             style={{ backgroundColor: (isSelected) ? '#4F8EA4' : 'inherit' }} // 当节点被选中时改变背景色
         >
-          {node.icon && <ListItemIcon sx={{
-            minWidth: '32px',
-          }} className={`${textColorClass}`}>{node.icon}</ListItemIcon>}
-          <ListItemText className={`text-sm ${textColorClass}`}>
+          {node.icon && <ListItemIcon classes={{
+            root: textColorClass
+          }} sx={{
+            color: isSelected ? 'white' : '',
+            minWidth: '32px'
+          }}>{node.icon}</ListItemIcon>}
+          <ListItemText className={`${textColorClass}`} primaryTypographyProps={{
+            fontSize: '14px'
+          }}>
             {node.title}
           </ListItemText>
           {node.children ? (open ? <ExpandLess /> : <ExpandMore />) : null}
@@ -91,6 +97,7 @@ export const TreeItem: React.FC<TreeItemProps> = React.memo(({ node, level }) =>
 
 
 export interface TreeProps {
+  selectedNodeKey?: string | null;
   treeData: TreeNode[];
   onNodeToggle?: (node: TreeNode) => void;
   onNodeSelect?: (node: TreeNode) => void;
@@ -99,7 +106,12 @@ export interface TreeProps {
 
 
 
-export const Tree: React.FC<TreeProps> = ({ treeData, onNodeToggle, onNodeSelect }) => {
+export const Tree: React.FC<TreeProps> = ({
+    treeData,
+    onNodeToggle,
+    onNodeSelect ,
+    selectedNodeKey
+  }) => {
   const [selectedNode, setSelectedNode] = useState<TreeNode | null>(null);
 
   const handleNodeToggle = (node: TreeNode) => {
