@@ -17,7 +17,7 @@ const Content: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 function App() {
 	return (
-		<div className={`h-full flex gap-10 bg-[#EFF3F4]`}>
+		<div className={`h-full flex md:gap-10 gap-0 bg-[#EFF3F4]`}>
 			<SideBar />
 			<div className={'flex-1'}>
 				<TopBar />
