@@ -1,4 +1,4 @@
-import React, {Suspense} from 'react';
+import React, {createContext, Suspense} from 'react';
 import { css } from '@emotion/react';
 import TopBar from './components/TopBar';
 import SideBar from './components/SideBar';
@@ -13,6 +13,15 @@ const Content: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     {children}
   </div>;
 };
+
+const AppThemeProvider = createContext({
+	light: {
+
+	},
+	dark: {
+
+	}
+})
 
 
 function App() {

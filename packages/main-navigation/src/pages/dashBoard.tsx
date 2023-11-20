@@ -1,21 +1,21 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Card } from '@mui/material';
-import {PieChart} from "../components/charts";
+import {HighChart, PieChart} from "../components/charts";
+import {mockChartProps} from "../components/charts/mock";
 export const DashBoard = () => {
-
   const items = [
     {
       title: 'chart1',
       grid: {
-        lg: 3,
+        lg: 8,
         xs: 12
-      }
+      },
     },
     {
       title: 'chart2',
       grid: {
-        lg: 3,
+        lg: 4,
         xs: 12
       }
     },
@@ -57,30 +57,10 @@ export const DashBoard = () => {
                   item
                   key={item.title} {...item.grid}
                   >
-                  <Card sx={{
-                    maxHeight: 280
-                  }} className={'h-full border-solid bg-white p-4 shadow-lg rounded-3xl'}>
+                  <div className={'h-full max-h-[320px] border-solid bg-white p-4 shadow-lg rounded-2xl'}>
                     {/*{item.title}*/}
-                    <PieChart data={[
-                      {
-                        name: 'Page A',
-                        uv: 4000,
-                        pv: 2400,
-                        amt: 2400,
-                      },
-                      {
-                        name: 'Page B',
-                        uv: 3000,
-                        pv: 1398,
-                        amt: 2210,
-                      },
-                      {
-                        name: 'Page C',
-                        uv: 2000,
-                        pv: 9800,
-                      }
-                    ]} value={'uv'} legend={'name'} />
-                  </Card>
+                    <HighChart {...mockChartProps()} />
+                  </div>
               </Grid>
             })
           }
