@@ -56,6 +56,9 @@ export const DashBoard = () => {
               return <Grid
                   item
                   key={item.title} {...item.grid}
+                  sx={{
+                    marginBottom: '16px'
+                  }}
                   >
                   <div className={'h-full max-h-[320px] border-solid bg-white p-4 shadow-lg rounded-2xl'}>
                     {/*{item.title}*/}
