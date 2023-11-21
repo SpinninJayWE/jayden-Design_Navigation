@@ -5,6 +5,7 @@ import Collapse from '@mui/material/Collapse';
 import List from '@mui/material/List';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import {ListItemIcon} from "@mui/material";
+import useTheme from "../../hooks/useTheme";
 
 interface TreeProviderProps {
   selectedNode: TreeNode | null | undefined;
@@ -35,7 +36,7 @@ export interface TreeItemProps {
 
 export const TreeItem: React.FC<TreeItemProps> = React.memo(({ node, level }) => {
   const [open, setOpen] = useState(false);
-
+  const { theme } = useTheme()
   const { selectedNode, handleNodeSelect, handleNodeToggle } = useContext(TreeProvider);
   const isSelected = useMemo(()=> {
     return selectedNode?.key === node.key
@@ -63,7 +64,7 @@ export const TreeItem: React.FC<TreeItemProps> = React.memo(({ node, level }) =>
             sx={{
               paddingLeft: (level + 1) * 16 + 'px'
             }}
-            style={{ backgroundColor: (isSelected) ? '#4F8EA4' : 'inherit' }} // 当节点被选中时改变背景色
+            style={{ backgroundColor: (isSelected) ? theme.primary.main : 'inherit' }} // 当节点被选中时改变背景色
         >
           {node.icon && <ListItemIcon classes={{
             root: textColorClass

@@ -4,7 +4,7 @@ import {createTheme} from "@mui/material";
 export const themeDefaultVal = {
   light: {
     primary: {
-      main: '#1976d2',
+      main: '#4DB6B1',
       contrastText: '#fff',
     },
     secondary: {
@@ -23,7 +23,7 @@ export const themeDefaultVal = {
   },
   dark: {
     primary: {
-      main: '#90caf9', // 主题颜色
+      main: '#2c8fbb', // 主题颜色
       contrastText: '#fff', // 与主题颜色对比的文字颜色
     },
     secondary: {
