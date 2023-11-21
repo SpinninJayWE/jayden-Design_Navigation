@@ -9,9 +9,17 @@ import '@fontsource/roboto/700.css';
 import { RouterProvider } from 'react-router-dom';
 import router from "./router";
 
+
+
+function Root () {
+
+  return (
+      <React.StrictMode>
+        <RouterProvider router={router} />
+      </React.StrictMode>
+  )
+}
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
-    ,
+    <Root />
 )

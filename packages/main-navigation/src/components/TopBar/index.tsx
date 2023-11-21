@@ -1,9 +1,30 @@
 import React, {useState} from "react";
 import {css} from "@emotion/react";
-import {Avatar, Button, Divider, IconButton, Menu, MenuItem, TextField} from "@mui/material";
+import {Avatar, Button, Divider, IconButton, Menu, MenuItem, TextField, Typography} from "@mui/material";
 import DensityMediumIcon from "@mui/icons-material/DensityMedium";
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import MessageIcon from '@mui/icons-material/Message';
+import theme from "tailwindcss/defaultTheme";
+import useTheme from "../../hooks/useTheme";
+import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';
+import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
+const LightSwitch = () => {
+  const { activeTheme, setTheme } = useTheme()
+  const toggleLight = () => {
+    setTheme(activeTheme === 'light'? 'dark' : 'light')
+  };
+
+  return (
+      <IconButton sx={{ marginLeft: '10px'}} onClick={toggleLight} aria-label="add to shopping cart">
+        {
+          activeTheme === 'light'?
+              <WbSunnyRoundedIcon /> :
+              <DarkModeRoundedIcon />
+        }
+      </IconButton>
+  );
+};
+
 export const TopBar = () => {
   const [height, setHeight] = useState(80);
   const style = css`
@@ -17,10 +38,7 @@ export const TopBar = () => {
   return (
       <div css={style} className={`flex items-center justify-between py-2 pr-4`}>
           <div className={'flex items-center'}>
-            <IconButton sx={{
-              border: '1px solid gray',
-              borderRadius: '12px',
-            }}>
+            <IconButton>
               <DensityMediumIcon />
             </IconButton>
             <TextField sx={{
@@ -29,24 +47,22 @@ export const TopBar = () => {
           </div>
           <div className={'flex items-center'}>
             <IconButton sx={{
-              border: '1px solid gray',
-              borderRadius: '12px',
               marginRight: '12px',
             }}>
               <MessageIcon />
             </IconButton>
-            <IconButton sx={{
-              border: '1px solid gray',
-              borderRadius: '12px',
-            }}>
+            <IconButton>
               <NotificationsNoneIcon />
             </IconButton>
+            <LightSwitch />
             <Avatar
                 className={'ml-4'}
                 src={'https://images.unsplash.com/photo-1559718062-361155fad299?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjJ8fHNhbGVzJTIwTWFuYWdlcnxlbnwwfHwwfHx8MA%3D%3D'} />
             <div className={'pl-4 text-left'}>
-              <p className={'text-base text-gray-900'}>JayDen</p>
-              <p className={'text-sm text-gray-500'}>Sales Manager</p>
+              <Typography component={'p'}>JayDen</Typography>
+              <Typography component={'p'} color={'text.secondary'}>
+                Sales Manager
+              </Typography>
             </div>
           </div>
         </div>

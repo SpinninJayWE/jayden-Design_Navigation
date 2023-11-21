@@ -1,8 +1,24 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Card } from '@mui/material';
 import {HighChart, PieChart} from "../components/charts";
 import {mockChartProps} from "../components/charts/mock";
+import useTheme from "../hooks/useTheme";
+import { Card } from '@mui/material';
+
+const DashBoardCard = ({ children }: {children: React.ReactNode} ) => {
+  return (
+      <Card
+          sx={{
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1), 0px 4px 8px rgba(0, 0, 0, 0.1)',  // 细微的阴影
+            borderRadius: '16px',  // 圆角弧度
+          }}
+          className={'h-full max-h-[320px] border-solid p-6 shadow-lg rounded-2xl'}
+      >
+          {children}
+      </Card>
+  )
+}
+
 export const DashBoard = () => {
   const items = [
     {
@@ -48,6 +64,8 @@ export const DashBoard = () => {
       }
     }
   ]
+
+  const { theme } = useTheme()
     return (
         <Grid container spacing={{md: 2, xs: 1}}>
           {
@@ -60,10 +78,9 @@ export const DashBoard = () => {
                     marginBottom: '16px'
                   }}
                   >
-                  <div className={'h-full max-h-[320px] border-solid bg-white p-4 shadow-lg rounded-2xl'}>
-                    {/*{item.title}*/}
+                  <DashBoardCard>
                     <HighChart {...mockChartProps()} />
-                  </div>
+                  </DashBoardCard>
               </Grid>
             })
           }
