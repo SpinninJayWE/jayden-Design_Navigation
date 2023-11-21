@@ -31,8 +31,8 @@ export const themeDefaultVal = {
       contrastText: '#fff',
     },
     background: {
-      default: '#121212', // 背景色
-      paper: '#424242', // 纸张颜色，如卡片、对话框等
+      default: '#424242', // 背景色
+      paper: '#121212', // 纸张颜色，如卡片、对话框等
     },
     text: {
       primary: '#fff', // 主要文字颜色

@@ -79,7 +79,7 @@ export const DashBoard = () => {
                   }}
                   >
                   <DashBoardCard>
-                    <HighChart {...mockChartProps()} />
+                    <HighChart {...mockChartProps()}/>
                   </DashBoardCard>
               </Grid>
             })
