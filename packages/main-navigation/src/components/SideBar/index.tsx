@@ -23,9 +23,9 @@ export const SideBar = () => {
     },
     {
       key: '2',
-      title: 'Blog',
+      title: 'Postings',
       icon: <Forum />,
-      path: '/blog'
+      path: '/postings'
     },
     {
       key: '9',
@@ -59,7 +59,7 @@ export const SideBar = () => {
   const nav = useNavigate()
 
   return (
-      <Box css={style} className={`pb-4 overflow-y-scroll shadow-sm`}>
+      <Box css={style} className={`pb-4 overflow-y-scroll shadow-sm sm:display-none`}>
         <div className={'flex items-center pl-3.5 h-[80px]'}>
           <Avatar className={'h-[60px]'} alt="Remy Sharp" src={JayLogo} />
           <span className={'pl-2 text-xl font-bold'}>Jay Design</span>

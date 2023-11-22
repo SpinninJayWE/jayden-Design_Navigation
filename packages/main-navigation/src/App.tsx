@@ -10,7 +10,7 @@ const Content: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const style = css`
 		height: calc(100% - 80px);
 	`;
-	return <div css={style} className={`p-4 pl-0 overflow-y-scroll`}>
+	return <div css={style} className={`p-4 overflow-y-scroll`}>
     {children}
   </div>;
 };
@@ -29,7 +29,7 @@ function App() {
 			}}>
 				<ThemeProvider theme={theme}>
 					<CssBaseline />
-					<Box className={`h-full flex md:gap-10 gap-0`} sx={{
+					<Box className={`h-full flex md:gap-6 gap-0`} sx={{
 						backgroundColor: theme.palette.background.default,
 					}}>
 						<SideBar />

@@ -40,6 +40,25 @@ export const themeDefaultVal = {
     },
     border: '#373737', // 边框颜色
   },
+  cyberpunk: {
+    primary: {
+      main: '#3D5AFE', // 主题颜色 - 鲜艳的电子蓝色
+      contrastText: '#fff', // 与主题颜色对比的文字颜色
+    },
+    secondary: {
+      main: '#E91E63', // 次要颜色 - 鲜艳的粉红色
+      contrastText: '#fff',
+    },
+    background: {
+      default: '#121212', // 背景色 - 深色背景
+      paper: '#1E1E1E', // 纸张颜色，如卡片、对话框等
+    },
+    text: {
+      primary: '#fff', // 主要文字颜色 - 白色文字
+      secondary: '#B0BEC5', // 次要文字颜色 - 淡蓝色文字
+    },
+    border: '#303030', // 边框颜色 - 浅灰色边框
+  },
   activeTheme: 'light',
   setTheme: (theme: 'light' | 'dark') => {},
 }

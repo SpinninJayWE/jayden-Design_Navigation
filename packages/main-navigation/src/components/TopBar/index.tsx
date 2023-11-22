@@ -36,7 +36,7 @@ export const TopBar = () => {
     }
   `
   return (
-      <div css={style} className={`flex items-center justify-between py-2 pr-4`}>
+      <div css={style} className={`flex items-center justify-between py-2 px-4 shadow-lg`}>
           <div className={'flex items-center'}>
             <IconButton>
               <DensityMediumIcon />

@@ -2,8 +2,9 @@ import {createBrowserRouter, useLocation, useNavigation} from "react-router-dom"
 import App from "./App";
 import React, {lazy} from "react";
 const DashBoard = lazy(() => import('./pages/dashBoard'))
+const Postings = lazy(() => import('./pages/Postings'))
+const PostingDetail = lazy(() =>import('./pages/postingDetail'))
 
-const Blog = lazy(() => import('./pages/blog'))
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -14,8 +15,14 @@ export const router = createBrowserRouter([
         element: <DashBoard />
       },
       {
-        path: '/blog',
-        element: <Blog />
+        path: '/postings',
+        element: <Postings />,
+        children: [
+          {
+            path: '/postings/:id',
+            element: <PostingDetail />
+          }
+        ]
       }
     ]
   },

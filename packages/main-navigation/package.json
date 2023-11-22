@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@ant-design/charts": "^1.4.2",
+    "@types/react-lazy-load-image-component": "^1.6.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-lazy-load-image-component": "^1.6.0",
     "react-router": "^6.19.0",
     "react-router-dom": "^6.19.0"
   },
