@@ -1,12 +1,24 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {getPostingsById} from "plugins/service/apis";
 
 
 export const PostingDetail = () =>{
   const { id } = useParams()
   const nav = useNavigate ()
   const [ open, setOpen ]  = useState(true)
+
+  const [state, setState] = useState<any>({})
+
+  useEffect(() => {
+    if (id) {
+      getPostingsById(Number(id)).then(res => {
+        const data = res.data
+        setState({ id: data.id, ...data.attributes })
+      })
+    }
+  }, []);
 
   const handleClose = () => {
     setOpen(() => {
@@ -16,11 +28,10 @@ export const PostingDetail = () =>{
   }
   return (
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Posting Detail {id}</DialogTitle>
+        <DialogTitle>{state.title}</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              To subscribe to this website, please enter your email address here. We
-              will send updates occasionally.
+              {state.description}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
