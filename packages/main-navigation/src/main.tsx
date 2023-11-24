@@ -14,9 +14,7 @@ import router from "./router";
 function Root () {
 
   return (
-      <React.StrictMode>
         <RouterProvider router={router} />
-      </React.StrictMode>
   )
 }
 
