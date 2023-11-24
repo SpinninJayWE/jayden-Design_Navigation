@@ -1,6 +1,6 @@
 import useTheme from "../hooks/useTheme";
-import {Typography, IconButton, Box} from "@mui/material";
-import { Masonry } from '@mui/lab';
+import {Typography, IconButton, Box, Snackbar} from "@mui/material";
+import {Alert, Masonry} from '@mui/lab';
 import React, {useEffect, useState} from "react";
 import {LazyLoadImage, trackWindowScroll} from 'react-lazy-load-image-component'
 import 'react-lazy-load-image-component/src/effects/blur.css';
@@ -8,8 +8,9 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import {Outlet, useNavigate} from "react-router-dom";
-import {getPostings, postPosting} from "plugins/service/apis";
+import {getPostings, likePosting, postPosting} from "plugins/service/apis";
 import {LikeButton, PostingActions} from "../components/postings";
+import {SnackbarProvider} from "notistack";
 const WaterfallGrid = ({ children }: any) => {
   return (
       <Masonry columns={{
@@ -23,7 +24,17 @@ const WaterfallGrid = ({ children }: any) => {
   );
 };
 
-const PostingBlock = React.memo( ({ id, commentCount, title, image, description, scrollPosition, onClick }: {
+const PostingBlock = React.memo( (
+    {
+      id,
+      commentCount,
+      likeCount,
+      title,
+      image,
+      description,
+      scrollPosition,
+      onClick,
+    }: {
   id: number,
   image: string,
   title: string,
@@ -35,6 +46,13 @@ const PostingBlock = React.memo( ({ id, commentCount, title, image, description,
   const { theme } = useTheme()
 
   const [like , setLike] = useState(false)
+
+
+  const handleLikecLick = () => {
+    likePosting(id).then(res => {
+      setLike(true)
+    })
+  }
   return (
       <div onClick={()=>{
         onClick && onClick(id)
@@ -53,7 +71,7 @@ const PostingBlock = React.memo( ({ id, commentCount, title, image, description,
             {title}
           </Typography>
           <Typography variant={'subtitle2'} component={'p'} color={'text.secondary'}>{description}</Typography>
-          <PostingActions commentCount={commentCount} liked={like} onLikeClick={setLike}/>
+          <PostingActions commentCount={commentCount} liked={like} onLikeClick={handleLikecLick}/>
         </div>
       </div>
   )
@@ -64,6 +82,8 @@ const PostingsList = ({items, scrollPosition} : {items?: { id: number, image: st
   const handlePostingBlockClick = (id: number) => {
     nav(`/postings/${id}`)
   }
+
+  const [open, setOpen] = useState(false)
   return (
       <>
         {
@@ -88,12 +108,12 @@ export const Postings = () => {
 
 
   return (
-      <div className={'postings-conatiner'}>
+      <SnackbarProvider  maxSnack={3} className={'postings-conatiner'}>
         <WaterfallGrid>
           <PostingsListHoc items={postings} />
         </WaterfallGrid>
         <Outlet />
-      </div>
+      </SnackbarProvider>
   )
 }
 

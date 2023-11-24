@@ -72,3 +72,8 @@ export const postPosting = async (data: any) => {
   const res = await request.post(`/postings`, data);
   return res.data;
 }
+
+export const likePosting = async (id: number) => {
+  const res = await request.put(`/postinglike/${id}`);
+  return res.data;
+}
