@@ -23,13 +23,14 @@ const WaterfallGrid = ({ children }: any) => {
   );
 };
 
-const PostingBlock = React.memo( ({ id, title, image, description, scrollPosition, onClick }: {
+const PostingBlock = React.memo( ({ id, commentCount, title, image, description, scrollPosition, onClick }: {
   id: number,
   image: string,
   title: string,
   description: string,
   scrollPosition?: any,
-  onClick?: (id: number) => void
+  onClick?: (id: number) => void,
+  [key: string] : any
 }) => {
   const { theme } = useTheme()
 
@@ -52,7 +53,7 @@ const PostingBlock = React.memo( ({ id, title, image, description, scrollPositio
             {title}
           </Typography>
           <Typography variant={'subtitle2'} component={'p'} color={'text.secondary'}>{description}</Typography>
-          <PostingActions liked={like} onLikeClick={setLike}/>
+          <PostingActions commentCount={commentCount} liked={like} onLikeClick={setLike}/>
         </div>
       </div>
   )
@@ -80,11 +81,8 @@ export const Postings = () => {
   const [postings, setPostings] = useState<any[]>([])
 
   useEffect(() => {
-    getPostings().then(res => {
-      setPostings(res.data.map((item: any) => {
-        const newItem = {id: item.id, ...item.attributes}
-        return newItem
-      }))
+    getPostings({ populate: "*" }).then(res => {
+      setPostings(res.data)
     })
   }, []);
 
