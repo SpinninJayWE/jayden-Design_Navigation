@@ -13,7 +13,6 @@ export const PostingDetail = () =>{
   const [state, setState] = useState<any>({})
 
   useEffect(() => {
-
     if (id) {
       setLoading(true)
       getPostingsById(Number(id)).then(res => {

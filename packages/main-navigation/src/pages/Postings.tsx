@@ -10,7 +10,7 @@ import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import {Outlet, useNavigate} from "react-router-dom";
 import {getPostings, likePosting, postPosting} from "plugins/service/apis";
 import {LikeButton, PostingActions} from "../components/postings";
-import {SnackbarProvider} from "notistack";
+import {SnackbarProvider, useSnackbar} from "notistack";
 const WaterfallGrid = ({ children }: any) => {
   return (
       <Masonry columns={{
@@ -34,6 +34,7 @@ const PostingBlock = React.memo( (
       description,
       scrollPosition,
       onClick,
+      isLiked
     }: {
   id: number,
   image: string,
@@ -45,12 +46,14 @@ const PostingBlock = React.memo( (
 }) => {
   const { theme } = useTheme()
 
-  const [like , setLike] = useState(false)
+  const [like , setLike] = useState(isLiked ?? false)
 
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleLikecLick = () => {
     likePosting(id).then(res => {
       setLike(true)
+      enqueueSnackbar(res.msg,{ variant: res.code ? 'warning' : 'success', anchorOrigin: { vertical: 'top', horizontal: 'center' } })
     })
   }
   return (

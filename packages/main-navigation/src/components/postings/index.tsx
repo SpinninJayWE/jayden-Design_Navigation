@@ -5,7 +5,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 
 
-export const LikeButton = React.memo(({ liked, onClick, likeCount }: { liked: boolean, onClick?: () => void, [key: string] : any }) => {
+export const LikeButton = React.memo(({ liked, onClick }: { liked: boolean, onClick?: () => void, [key: string] : any }) => {
       return (
           <div onClick={onClick} className={'inline-flex items-center'}>
               <IconButton>
@@ -13,7 +13,6 @@ export const LikeButton = React.memo(({ liked, onClick, likeCount }: { liked: bo
               </IconButton>
               <Typography variant={'body2'} component={'span'} color={`${liked ? 'secondary.main' : 'text.secondary'}`} className={'ml-2'}>
                 {liked? 'Liked' : 'Like'}
-                { likeCount ? ` (${likeCount})` : ''}
               </Typography>
           </div>
       )

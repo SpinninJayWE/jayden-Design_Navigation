@@ -8,13 +8,16 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { RouterProvider } from 'react-router-dom';
 import router from "./router";
+import {AuthProvider} from "./providers/user";
 
 
 
 function Root () {
 
   return (
+      <AuthProvider>
         <RouterProvider router={router} />
+      </AuthProvider>
   )
 }
 

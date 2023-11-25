@@ -4,7 +4,7 @@ import React, {lazy} from "react";
 const DashBoard = lazy(() => import('./pages/dashBoard'))
 const Postings = lazy(() => import('./pages/Postings'))
 const PostingDetail = lazy(() =>import('./pages/postingDetail'))
-
+const Login = lazy(() => import('./pages/login'))
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -23,9 +23,14 @@ export const router = createBrowserRouter([
             element: <PostingDetail />
           }
         ]
+      },
+      {
+        path: '/login',
+        element: <Login/>
       }
     ]
   },
+
 ]);
 
 export default router

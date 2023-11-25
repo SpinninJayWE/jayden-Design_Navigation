@@ -8,6 +8,7 @@ import theme from "tailwindcss/defaultTheme";
 import useTheme from "../../hooks/useTheme";
 import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
+import {useNavigate} from "react-router-dom";
 const LightSwitch = () => {
   const { activeTheme, setTheme } = useTheme()
   const toggleLight = () => {
@@ -35,6 +36,7 @@ export const TopBar = () => {
       font-size: 18px;
     }
   `
+  const nav = useNavigate();
   return (
       <div css={style} className={`flex items-center justify-between py-2 px-4 shadow-lg`}>
           <div className={'flex items-center'}>
@@ -56,7 +58,10 @@ export const TopBar = () => {
             </IconButton>
             <LightSwitch />
             <Avatar
-                className={'ml-4'}
+                className={'ml-4 cursor-pointer'}
+                onClick={() => {
+                  nav('/login')
+                }}
                 src={'https://images.unsplash.com/photo-1559718062-361155fad299?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjJ8fHNhbGVzJTIwTWFuYWdlcnxlbnwwfHwwfHx8MA%3D%3D'} />
             <div className={'pl-4 text-left'}>
               <Typography component={'p'}>JayDen</Typography>

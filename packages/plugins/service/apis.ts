@@ -1,5 +1,6 @@
 import { request } from "./index";
 import qs from 'qs'
+import {AuthStorage} from "main-navigation/src/providers/user";
 
 type SortParam = string[];
 type FieldsParam = string[];
@@ -76,4 +77,17 @@ export const postPosting = async (data: any) => {
 export const likePosting = async (id: number) => {
   const res = await request.put(`/postinglike/${id}`);
   return res.data;
+}
+
+export const login = async (params: { email: string, password: string }) => {
+  const { data } = await  request.post('/auth/local',
+      { identifier: params.email, password: params.password }, {
+        headers: {
+          Authorization: null
+        }
+      })
+  AuthStorage.setJwt(data.jwt)
+  AuthStorage.setUser(data.user)
+  request.defaults.headers.Authorization = 'Bearer ' + data.jwt
+  return data
 }
