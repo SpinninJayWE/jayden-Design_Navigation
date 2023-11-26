@@ -6,10 +6,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import {useNavigate} from "react-router-dom";
-import {login} from "plugins/service/apis";
-import {useAuth} from "../providers/user";
+import {login, logout} from "plugins/service/apis";
+import {AuthStorage, useAuth} from "../providers/user";
 import {Box, IconButton} from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import request from "plugins/service";
+import {isEmptyObject} from "plugins/utils";
 function LoginDialog({ open, handleClose }: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,15 +19,20 @@ function LoginDialog({ open, handleClose }: any) {
   const handleLogin = () => {
     // 实现登录逻辑
     login({email, password}).then(res => {
-      console.log(res)
       setAuthData(res.jwt, res.user)
     })
   };
 
+  const handLogout = () => {
+    AuthStorage.clearAuthData()
+    setAuthData('', null)
+    request.defaults.headers.Authorization = null
+  }
+
   return (
       <Dialog fullScreen open={open} onClose={handleClose}>
         <DialogTitle>
-          Login
+          { (user && user.id ) ? 'Welcome back '+ user.username : 'Login'}
           <IconButton
               color="inherit"
               onClick={handleClose}
@@ -35,7 +42,7 @@ function LoginDialog({ open, handleClose }: any) {
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-        <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+        { (user && user.id ) ? <Button variant={'contained'} onClick={handLogout}>Logout</Button> : <Box display="flex" justifyContent="center" alignItems="center" height="100%">
           <Box width="100%" maxWidth={500}>
             <DialogContent>
               <TextField
@@ -65,13 +72,17 @@ function LoginDialog({ open, handleClose }: any) {
               <Button variant='contained' onClick={handleLogin}>Login</Button>
             </DialogActions>
           </Box>
-        </Box>
+        </Box> }
       </Dialog>
   );
 }
 export const Login = () => {
+  const nav = useNavigate()
+  const handClose = () => {
+    nav('/')
+  }
   return (
-      <LoginDialog open={true}>
+      <LoginDialog handleClose={handClose} open={true}>
 
       </LoginDialog>
   )

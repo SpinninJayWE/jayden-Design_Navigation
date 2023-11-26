@@ -8,8 +8,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import {Outlet, useNavigate} from "react-router-dom";
-import {getPostings, likePosting, postPosting} from "plugins/service/apis";
-import {LikeButton, PostingActions} from "../components/postings";
+import {getPostings, postingLike} from "plugins/service/apis";
+import {PostingActions} from "../components/postings";
 import {SnackbarProvider, useSnackbar} from "notistack";
 const WaterfallGrid = ({ children }: any) => {
   return (
@@ -51,7 +51,7 @@ const PostingBlock = React.memo( (
   const { enqueueSnackbar } = useSnackbar();
 
   const handleLikecLick = () => {
-    likePosting(id).then(res => {
+    postingLike(id).then(res => {
       setLike(true)
       enqueueSnackbar(res.msg,{ variant: res.code ? 'warning' : 'success', anchorOrigin: { vertical: 'top', horizontal: 'center' } })
     })

@@ -68,17 +68,6 @@ export const getPostingsById = async (id: number, query?: QueryParams) => {
   return res.data;
 }
 
-
-export const postPosting = async (data: any) => {
-  const res = await request.post(`/postings`, data);
-  return res.data;
-}
-
-export const likePosting = async (id: number) => {
-  const res = await request.put(`/postinglike/${id}`);
-  return res.data;
-}
-
 export const login = async (params: { email: string, password: string }) => {
   const { data } = await  request.post('/auth/local',
       { identifier: params.email, password: params.password }, {
@@ -90,4 +79,11 @@ export const login = async (params: { email: string, password: string }) => {
   AuthStorage.setUser(data.user)
   request.defaults.headers.Authorization = 'Bearer ' + data.jwt
   return data
+}
+
+export const postingLike = async (id: number) => {
+  const res = await request.post(`/posting-likes`, {
+    postingId: id
+  });
+  return res.data;
 }
