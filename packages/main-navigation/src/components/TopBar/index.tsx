@@ -9,6 +9,7 @@ import useTheme from "../../hooks/useTheme";
 import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import {useNavigate} from "react-router-dom";
+import {useAuth} from "../../providers/user";
 const LightSwitch = () => {
   const { activeTheme, setTheme } = useTheme()
   const toggleLight = () => {
@@ -37,6 +38,7 @@ export const TopBar = () => {
     }
   `
   const nav = useNavigate();
+  const { isAuthenticated, user } = useAuth()
   return (
       <div css={style} className={`flex items-center justify-between py-2 px-4 shadow-lg`}>
           <div className={'flex items-center'}>
@@ -57,18 +59,30 @@ export const TopBar = () => {
               <NotificationsNoneIcon />
             </IconButton>
             <LightSwitch />
-            <Avatar
-                className={'ml-4 cursor-pointer'}
-                onClick={() => {
+            {
+              isAuthenticated ?
+                <>
+                  <Avatar
+                      className={'ml-4 cursor-pointer'}
+                      onClick={() => {
+                        nav('/login')
+                      }}
+                      src={'https://images.unsplash.com/photo-1559718062-361155fad299?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjJ8fHNhbGVzJTIwTWFuYWdlcnxlbnwwfHwwfHx8MA%3D%3D'} />
+                  <div className={'pl-4 text-left'}>
+                    <Typography component={'p'}>{user.username}</Typography>
+                    <Typography component={'p'} color={'text.secondary'}>
+                      {user.email}
+                    </Typography>
+                  </div>
+                </>
+                :
+                <Button variant={'text'} color={'warning'} onClick={() => {
                   nav('/login')
-                }}
-                src={'https://images.unsplash.com/photo-1559718062-361155fad299?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjJ8fHNhbGVzJTIwTWFuYWdlcnxlbnwwfHwwfHx8MA%3D%3D'} />
-            <div className={'pl-4 text-left'}>
-              <Typography component={'p'}>JayDen</Typography>
-              <Typography component={'p'} color={'text.secondary'}>
-                Sales Manager
-              </Typography>
-            </div>
+                }}>
+                  Click to log in
+                </Button>
+            }
+
           </div>
         </div>
   );

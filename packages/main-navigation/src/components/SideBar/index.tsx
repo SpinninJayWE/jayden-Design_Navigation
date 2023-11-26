@@ -1,10 +1,10 @@
 import {css} from "@emotion/react";
 import {Avatar, Box, Divider} from "@mui/material";
 import JayLogo from "../../assets/Jay.png";
-import React from "react";
+import React, {useMemo} from "react";
 import {Tree, TreeNode} from "../TreeList";
 import {Dashboard, Explore, Forum, LibraryMusic, LocalMall, LocalPlay} from "@mui/icons-material";
-import { useNavigate } from 'react-router-dom'
+import {useLocation, useNavigate} from 'react-router-dom'
 import useTheme from "../../hooks/useTheme";
 export const SideBar = () => {
 
@@ -58,6 +58,21 @@ export const SideBar = () => {
 
   const nav = useNavigate()
 
+  const local = useLocation()
+
+  const activeNode = useMemo(() => {
+    const cur = treeData.find(item => {
+      const res = item.path === local.pathname
+      return res
+    })
+
+    if (cur) {
+      return cur
+    }
+
+    return null
+  }, [local.pathname])
+
   return (
       <Box css={style} className={`pb-4 overflow-y-scroll shadow-sm sm:display-none`}>
         <div className={'flex items-center pl-3.5 h-[80px]'}>
@@ -70,7 +85,7 @@ export const SideBar = () => {
             // 确保路径以单个斜杠开始
             nav(node.path);
           }
-        }} treeData={treeData}/>
+        }} treeData={treeData} customSelectedNode={activeNode}/>
         <Divider />
       </Box>
   );

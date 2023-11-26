@@ -6,20 +6,21 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import {useNavigate} from "react-router-dom";
-import {login, logout} from "plugins/service/apis";
+import {login} from "plugins/service/apis";
 import {AuthStorage, useAuth} from "../providers/user";
 import {Box, IconButton} from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import request from "plugins/service";
-import {isEmptyObject} from "plugins/utils";
 function LoginDialog({ open, handleClose }: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { user, setAuthData } = useAuth()
+  const nav = useNavigate()
   const handleLogin = () => {
     // 实现登录逻辑
     login({email, password}).then(res => {
       setAuthData(res.jwt, res.user)
+      nav('/')
     })
   };
 

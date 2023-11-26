@@ -98,7 +98,7 @@ export const TreeItem: React.FC<TreeItemProps> = React.memo(({ node, level }) =>
 
 
 export interface TreeProps {
-  selectedNodeKey?: string | null;
+  customSelectedNode?: TreeProviderProps['selectedNode'];
   treeData: TreeNode[];
   onNodeToggle?: (node: TreeNode) => void;
   onNodeSelect?: (node: TreeNode) => void;
@@ -111,7 +111,7 @@ export const Tree: React.FC<TreeProps> = ({
     treeData,
     onNodeToggle,
     onNodeSelect ,
-    selectedNodeKey
+    customSelectedNode
   }) => {
   const [selectedNode, setSelectedNode] = useState<TreeNode | null>(null);
 
@@ -136,7 +136,7 @@ export const Tree: React.FC<TreeProps> = ({
   };
 
   return (
-      <TreeProvider.Provider value={{ selectedNode, handleNodeSelect, handleNodeToggle }}>
+      <TreeProvider.Provider value={{ selectedNode: customSelectedNode ?? selectedNode, handleNodeSelect, handleNodeToggle }}>
         <List>{renderTreeItems(treeData)}</List>
       </TreeProvider.Provider>
   );

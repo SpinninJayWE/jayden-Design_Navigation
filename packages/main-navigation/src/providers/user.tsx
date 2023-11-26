@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, {createContext, useState, useContext, ReactNode, useMemo} from 'react';
 // 定义用户信息类型
 interface UserInfo {
   id: number;
@@ -14,6 +14,7 @@ interface UserInfo {
 
 // 定义存储在 Context 中的数据类型
 interface AuthContextType {
+  isAuthenticated: boolean;
   jwt: string;
   user: UserInfo;
   setAuthData: (jwt: string, user: UserInfo) => void;
@@ -83,8 +84,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(newUser);
   };
 
+  const isAuthenticated = useMemo(() => {
+    return !!(jwt && user.id)
+  }, [jwt, user])
+
   return (
-      <AuthContext.Provider value={{ jwt, user, setAuthData }}>
+      <AuthContext.Provider value={{ jwt, user, setAuthData, isAuthenticated }}>
         {children}
       </AuthContext.Provider>
   );

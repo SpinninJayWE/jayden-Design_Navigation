@@ -1,7 +1,20 @@
-import {Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Skeleton} from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Skeleton,
+  Typography
+} from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
-import {useEffect, useState} from "react";
-import {getPostingsById} from "plugins/service/apis";
+import React, {useEffect, useState} from "react";
+import {getPostingsById, postingLike} from "plugins/service/apis";
+import {LazyLoadImage} from "react-lazy-load-image-component";
+import {PostingActions} from "../components/postings";
+import {enqueueSnackbar} from "notistack";
 
 
 export const PostingDetail = () =>{
@@ -27,8 +40,18 @@ export const PostingDetail = () =>{
       return false
     })
   }
+
+  const handleLikeClick = () => {
+    postingLike(id).then(res => {
+      setState(val => ({
+        ...val,
+        isLiked: true
+      }))
+      enqueueSnackbar(res.msg,{ variant: res.code ? 'warning' : 'success', anchorOrigin: { vertical: 'top', horizontal: 'center' } })
+    })
+  }
   return (
-      <Dialog fullWidth={true} open={open} onClose={handleClose}>
+      <Dialog maxWidth={'lg'} fullWidth={true} open={open} onClose={handleClose}>
         {
           loading ?
             <Box className={'w-full'}>
@@ -41,11 +64,19 @@ export const PostingDetail = () =>{
               </DialogContent>
             </Box> :
             <>
-              <DialogTitle>{state.title}</DialogTitle>
               <DialogContent>
-                <DialogContentText>
-                  {state.description}
-                </DialogContentText>
+                <Box className={`flex gap-4`}>
+                  <div>
+                    <img className={'max-h-[800px]'} src={state.image} alt={state.title} />
+                  </div>
+                  <div className={'flex flex-col'}>
+                    <Typography variant={'h5'} color={'text.primary'} className={'pb-4'}>{state.title}</Typography>
+                    <Typography variant={'subtitle2'} color={'text.secondary'}>{state.description}</Typography>
+                    <div className={'mt-auto'}>
+                      <PostingActions commentCount={state.commentCount} liked={state.isLiked} onLikeClick={handleLikeClick}/>
+                    </div>
+                  </div>
+                </Box>
               </DialogContent>
               <DialogActions>
                 <Button color={'secondary'} variant={'outlined'} onClick={handleClose}>Cancel</Button>
