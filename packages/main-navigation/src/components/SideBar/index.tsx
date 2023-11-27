@@ -3,7 +3,7 @@ import {Avatar, Box, Divider} from "@mui/material";
 import JayLogo from "../../assets/Jay.png";
 import React, {useMemo} from "react";
 import {Tree, TreeNode} from "../TreeList";
-import {Dashboard, Explore, Forum, LibraryMusic, LocalMall, LocalPlay} from "@mui/icons-material";
+import {ChatBubble, Dashboard, Explore, Forum, LibraryMusic, LocalMall, LocalPlay} from "@mui/icons-material";
 import {useLocation, useNavigate} from 'react-router-dom'
 import useTheme from "../../hooks/useTheme";
 export const SideBar = () => {
@@ -26,6 +26,12 @@ export const SideBar = () => {
       title: 'Postings',
       icon: <Forum />,
       path: '/postings'
+    },
+    {
+      key: '6',
+      title: 'Chat',
+      icon: <ChatBubble />,
+      path: '/chat'
     },
     {
       key: '9',

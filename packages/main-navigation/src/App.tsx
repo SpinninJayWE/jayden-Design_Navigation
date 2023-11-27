@@ -10,7 +10,7 @@ const Content: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const style = css`
 		height: calc(100% - 80px);
 	`;
-	return <div css={style} className={`p-4 overflow-y-scroll`}>
+	return <div css={style} className={`p-4 pl-0 overflow-y-scroll`}>
     {children}
   </div>;
 };

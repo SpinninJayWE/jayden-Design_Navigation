@@ -87,3 +87,8 @@ export const postingLike = async (id: number) => {
   });
   return res.data;
 }
+
+export const postingCreate = async (params: { title: string, description: string, image: string }) => {
+  const res = await request.post(`/postings`, params);
+  return res.data;
+}

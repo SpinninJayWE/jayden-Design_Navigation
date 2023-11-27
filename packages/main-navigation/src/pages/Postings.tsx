@@ -1,7 +1,7 @@
 import useTheme from "../hooks/useTheme";
-import {Typography, IconButton, Box, Snackbar} from "@mui/material";
+import {Typography, IconButton, Box, Snackbar, Skeleton, Card} from "@mui/material";
 import {Alert, Masonry} from '@mui/lab';
-import React, {useEffect, useState} from "react";
+import React, {ReactElement, useEffect, useState} from "react";
 import {LazyLoadImage, trackWindowScroll} from 'react-lazy-load-image-component'
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -9,8 +9,9 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import {Outlet, useNavigate} from "react-router-dom";
 import {getPostings, postingLike} from "plugins/service/apis";
-import {PostingActions} from "../components/postings";
+import {PostingActions, PostingTool} from "../components/postings";
 import {SnackbarProvider, useSnackbar} from "notistack";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 const WaterfallGrid = ({ children }: any) => {
   return (
       <Masonry columns={{
@@ -47,6 +48,7 @@ const PostingBlock = React.memo( (
   const { theme } = useTheme()
 
   const [like , setLike] = useState(isLiked ?? false)
+  const [imgIsLoaded, setImgIsLoaded] = useState(false)
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -62,12 +64,22 @@ const PostingBlock = React.memo( (
       }} style={{
         background: theme.background.paper
       }} data-id={id} className={`posting-item p-4 pb-2 rounded-lg cursor-pointer shadow-lg hover:shadow-2xl hover:shadow-cyan-600/50 transition duration-600 ease-in-out`}>
+        {
+          !imgIsLoaded ?  <Skeleton animation="wave" height={280} variant={'rounded'} />: <></>
+        }
         <LazyLoadImage
+            className={`${imgIsLoaded ? 'block' : 'hidden'}`}
             src={image}
             alt={title}
             effect={'blur'}
             scrollPosition={scrollPosition}
-            placeholder={<div style={{width: '100%', height: 320}}>Loading...</div>}
+            onLoad={() => {
+              setImgIsLoaded(true)
+            }}
+            onError={(e) => {
+              setImgIsLoaded(true)
+            }}
+            threshold={0}
         />
         <div className={'mt-2'}>
           <Typography variant={'h6'} >
@@ -112,6 +124,7 @@ export const Postings = () => {
 
   return (
       <SnackbarProvider  maxSnack={3} className={'postings-conatiner'}>
+        <PostingTool />
         <WaterfallGrid>
           <PostingsListHoc items={postings} />
         </WaterfallGrid>
