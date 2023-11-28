@@ -4,13 +4,14 @@ import {useNavigate} from "react-router-dom";
 import {useSnackbar} from "notistack";
 import {postingCreate} from "plugins/service/apis";
 import {LazyLoadImage} from "react-lazy-load-image-component";
+import InputFileUpload from "../components/uploader";
 
 
 export const PostingAdd = () => {
   const [posting, setPosting] = useState<any>({
     title: '',
     description: '',
-    image: '',
+    cover: '',
   })
 
   const nav = useNavigate()
@@ -23,7 +24,7 @@ export const PostingAdd = () => {
       if (posting.description.length === 0) {
         return false
       }
-      if (posting.image.length === 0) {
+      if (posting.cover.length === 0) {
         return false
       }
       return true
@@ -56,11 +57,14 @@ export const PostingAdd = () => {
         <DialogContent>
           <TextField name={'title'}  onChange={handleChange} variant={'standard'} margin={'dense'} autoFocus={true} fullWidth={true} label={'Title'} ></TextField>
           <TextField name={'description'}  onChange={handleChange} variant={'outlined'} multiline margin={'dense'} rows={4} fullWidth={true} label={'Description'} ></TextField>
-          <TextField name={'image'}  onChange={handleChange} variant={'standard'} margin={'dense'} fullWidth={true} label={'Image'} ></TextField>
-          <Typography variant={'caption'} color={'text.secondary'}>You can copy the image link</Typography>
-          {
-            posting.image && <img width={120} height={120} src={posting.image} alt={'Image'} />
-          }
+          <InputFileUpload className={'mt-2'} onChange={(file: File) => {
+            setPosting((val: any) => ({...val, cover: file}))
+          }} />
+          {/*<TextField name={'image'}  onChange={handleChange} variant={'standard'} margin={'dense'} fullWidth={true} label={'Image'} ></TextField>*/}
+          {/*<Typography variant={'caption'} color={'text.secondary'}>You can copy the image link</Typography>*/}
+          {/*{*/}
+          {/*  posting.image && <img width={120} height={120} src={posting.image} alt={'Image'} />*/}
+          {/*}*/}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>

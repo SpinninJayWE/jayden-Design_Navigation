@@ -88,7 +88,19 @@ export const postingLike = async (id: number) => {
   return res.data;
 }
 
-export const postingCreate = async (params: { title: string, description: string, image: string }) => {
-  const res = await request.post(`/postings`, params);
+export const postingCreate = async (params: { title: string; description: string; cover: File }) => {
+  const postingFormData = new FormData();
+  const data: Record<string, any> = {};
+
+  Object.keys(params).forEach((key: keyof typeof params) => {
+    if (key === 'cover') {
+      postingFormData.append('files.' + key, params[key], params[key].name);
+    } else {
+      data[key] = params[key];
+    }
+  });
+
+  postingFormData.append('data', JSON.stringify(data));
+  const res = await request.post(`/postings`, postingFormData);
   return res.data;
-}
+};
