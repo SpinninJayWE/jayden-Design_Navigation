@@ -1,17 +1,14 @@
 import useTheme from "../hooks/useTheme";
-import {Typography, IconButton, Box, Snackbar, Skeleton, Card} from "@mui/material";
-import {Alert, Masonry} from '@mui/lab';
-import React, {ReactElement, useEffect, useState} from "react";
+import {Typography, Skeleton} from "@mui/material";
+import { Masonry} from '@mui/lab';
+import React, { useEffect, useMemo, useState} from "react";
 import {LazyLoadImage, trackWindowScroll} from 'react-lazy-load-image-component'
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import {Outlet, useNavigate} from "react-router-dom";
 import {getPostings, postingLike} from "plugins/service/apis";
 import {PostingActions, PostingTool} from "../components/postings";
 import {SnackbarProvider, useSnackbar} from "notistack";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { BASE_URL } from "plugins/service";
 const WaterfallGrid = ({ children }: any) => {
   return (
       <Masonry columns={{
@@ -29,13 +26,13 @@ const PostingBlock = React.memo( (
     {
       id,
       commentCount,
-      likeCount,
       title,
       image,
       description,
       scrollPosition,
       onClick,
-      isLiked
+      isLiked,
+      cover
     }: {
   id: number,
   image: string,
@@ -58,6 +55,10 @@ const PostingBlock = React.memo( (
       enqueueSnackbar(res.msg,{ variant: res.code ? 'warning' : 'success', anchorOrigin: { vertical: 'top', horizontal: 'center' } })
     })
   }
+
+  const images = useMemo(() => {
+    return cover && cover.url ? BASE_URL + cover.url : image
+  }, [image, cover])
   return (
       <div onClick={()=>{
         onClick && onClick(id)
@@ -69,7 +70,7 @@ const PostingBlock = React.memo( (
         }
         <LazyLoadImage
             className={`${imgIsLoaded ? 'block' : 'hidden'}`}
-            src={image}
+            src={images}
             alt={title}
             effect={'blur'}
             scrollPosition={scrollPosition}

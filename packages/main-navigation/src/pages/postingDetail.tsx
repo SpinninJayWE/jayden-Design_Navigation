@@ -4,17 +4,16 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Skeleton,
   Typography
 } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {getPostingsById, postingLike} from "plugins/service/apis";
-import {LazyLoadImage} from "react-lazy-load-image-component";
 import {PostingActions} from "../components/postings";
 import {enqueueSnackbar} from "notistack";
+import { BASE_URL } from "plugins/service/index";
 
 
 export const PostingDetail = () =>{
@@ -50,6 +49,10 @@ export const PostingDetail = () =>{
       enqueueSnackbar(res.msg,{ variant: res.code ? 'warning' : 'success', anchorOrigin: { vertical: 'top', horizontal: 'center' } })
     })
   }
+
+  const image = useMemo(() => {
+    return state.cover ? BASE_URL + state.cover.url : state.image
+  }, [state.image, state.cover])
   return (
       <Dialog maxWidth={'lg'} fullWidth={true} open={open} onClose={handleClose}>
         {
@@ -67,9 +70,9 @@ export const PostingDetail = () =>{
               <DialogContent>
                 <Box className={`flex gap-4`}>
                   <div>
-                    <img className={'max-h-[800px]'} src={state.image} alt={state.title} />
+                    <img className={'max-h-[800px]'} src={image} alt={state.title} />
                   </div>
-                  <div className={'flex flex-col'}>
+                  <div className={'flex flex-col flex-auto'}>
                     <Typography variant={'h5'} color={'text.primary'} className={'pb-4'}>{state.title}</Typography>
                     <Typography variant={'subtitle2'} color={'text.secondary'}>{state.description}</Typography>
                     <div className={'mt-auto'}>
