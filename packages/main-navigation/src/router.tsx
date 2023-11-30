@@ -1,6 +1,7 @@
 import {createBrowserRouter, useLocation, useNavigation} from "react-router-dom";
 import App from "./App";
 import React, {lazy} from "react";
+import SessionChatWindow from "./components/chat/session-chat";
 const DashBoard = lazy(() => import('./pages/dashBoard'))
 const Postings = lazy(() => import('./pages/Postings'))
 const PostingDetail = lazy(() =>import('./pages/postingDetail'))
@@ -32,7 +33,13 @@ export const router = createBrowserRouter([
       },
       {
         path: '/chat',
-        element: <Chat />
+        element: <Chat />,
+        children: [
+          {
+            path: '/chat/:id',
+            element: <SessionChatWindow />
+          }
+        ]
       },
       {
         path: '/login',

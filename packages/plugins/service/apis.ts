@@ -104,3 +104,15 @@ export const postingCreate = async (params: { title: string; description: string
   const res = await request.post(`/postings`, postingFormData);
   return res.data;
 };
+
+
+
+export const getAllSessions = async () => {
+  const res = await request.get(`/strapi-chat/get-all-sessions`);
+  return res.data;
+}
+
+export const getSession = async (id: string) => {
+  const res = await request.get('/strapi-chat/get-session-by-id/' + id)
+  return res.data
+}
