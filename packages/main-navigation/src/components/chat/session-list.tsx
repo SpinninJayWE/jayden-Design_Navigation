@@ -30,6 +30,10 @@ export const SessionList = () => {
    nav('/chat/' + node.key)
   }
 
+  const handleNewChat = () => {
+    nav('/chat/new')
+  }
+
   return (
       <Box
           className={'shadow-lg rounded-lg p-4 py-6'}
@@ -38,7 +42,7 @@ export const SessionList = () => {
             backgroundColor: theme.background.paper
           }}
       >
-        <Button variant={'contained'} color={'secondary'} className={'mt-2'} fullWidth>
+        <Button onClick={handleNewChat} variant={'contained'} color={'secondary'} className={'mt-2'} fullWidth>
           New Chat
         </Button>
         <Tree onNodeSelect={handleNodeSeleted} treeData={treeData} />

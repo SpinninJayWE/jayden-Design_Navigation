@@ -116,3 +116,12 @@ export const getSession = async (id: string) => {
   const res = await request.get('/strapi-chat/get-session-by-id/' + id)
   return res.data
 }
+
+export const sendSessionMessage = async (id: string, message: string) => {
+  const res = await request.post('/strapi-chat', {
+    sessionId: id,
+    input: message
+  }, {
+  })
+  return res.data
+}

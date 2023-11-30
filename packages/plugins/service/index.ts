@@ -6,7 +6,8 @@ export const BASE_URL = 'http://localhost:1337'
 
 export const request = axios.create({
   baseURL: BASE_URL + '/api',
-  timeout: 12 * 1000
+  // 超时时间不限制
+  timeout: 0
 })
 
 if (AuthStorage.getJwt()) {

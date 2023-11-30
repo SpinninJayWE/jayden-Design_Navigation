@@ -1,33 +1,108 @@
 import { useParams } from "react-router-dom"
-import {useEffect, useState} from "react";
-import {getSession} from "plugins/service/apis";
+import {useEffect, useRef, useState} from "react";
+import {getSession, sendSessionMessage} from "plugins/service/apis";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
+import {Box, Button, InputAdornment, TextField} from "@mui/material";
+import {LoadingButton} from "@mui/lab";
 
 export const SessionChatWindow = () => {
   const { id } = useParams()
 
-  const [chat, setChat] = useState<any[]>([])
+  let [sessionId, setSessionId] = useState<string>(id ?? 'new')
 
+  const [chat, setChat] = useState<any[]>([])
+  const [message, setMessage] = useState<string>('')
+  const [messageLoading, setMessageLoading] = useState<boolean>(false)
+
+  const messagesEndRef = useRef<any>(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
   useEffect(() => {
-    getSession(id!).then(res => {
-      setChat(res.history)
-    })
+    scrollToBottom();  // 当 chat 变化时，滚动到底部
+  }, [chat]);  // 依赖项是 chat
+  useEffect(() => {
+    if (sessionId && sessionId !== 'new') {
+        getSession(id!).then(res => {
+          setChat(res.history)
+        })
+    }
   }, []);
-  return (
-      <>
-        <List>
-          {
-            chat.map((item, index) => {
-              return (
-                  <ListItem key={index}>
-                    {item.kwargs.content}
-                  </ListItem>
-              )
-            })
+
+
+  const handleSend = () => {
+    setChat(val => {
+      return [
+        ...val,
+        {
+          kwargs: {
+            content: message
           }
-        </List>
-      </>
+        }
+      ]
+    })
+    setMessage('')
+    setMessageLoading(true)
+    sendSessionMessage(sessionId, message).then(({ data }) => {
+      setChat(val => {
+        return [
+            ...val,
+          {
+            kwargs: {
+              content: data.response
+            }
+          }
+        ]
+      })
+      if (sessionId === 'new') {
+        setSessionId(data.sessionId)
+      }
+      setMessageLoading(false)
+    })
+  }
+  return (
+      <Box className={'h-full flex flex-col gap-4'}>
+        <div className={'flex-auto overflow-y-scroll'}>
+          <List>
+            {
+              chat.map((item, index) => {
+                return (
+                    <ListItem key={index}>
+                      {item.kwargs.content}
+                    </ListItem>
+                )
+              })
+            }
+            <div ref={messagesEndRef} />
+          </List>
+        </div>
+        <div className={'mt-auto'}>
+          <TextField
+              maxRows={4}
+              autoFocus
+              multiline={true}
+              fullWidth
+              onChange={e => {
+                setMessage(e.target.value)
+              }}
+              value={message}
+              InputProps={{
+                endAdornment: (
+                    <InputAdornment position="end">
+                      <LoadingButton
+                          loading={messageLoading}
+                          onClick={handleSend}
+                      >
+                        发送
+                      </LoadingButton>
+                    </InputAdornment>
+                ),
+              }}
+          />
+        </div>
+      </Box>
   )
 }
 
