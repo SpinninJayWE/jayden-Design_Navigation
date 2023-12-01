@@ -1,6 +1,7 @@
 import { request } from "./index";
 import qs from 'qs'
 import {AuthStorage} from "main-navigation/src/providers/user";
+import {render} from "nprogress";
 
 type SortParam = string[];
 type FieldsParam = string[];
@@ -124,4 +125,47 @@ export const sendSessionMessage = async (id: string, message: string) => {
   }, {
   })
   return res.data
+}
+
+export const sendMessageStrem = async (id: string, message: string) => {
+// 将数据转换为JSON字符串
+  const postData = JSON.stringify({
+    sessionId: id,
+    input: message,
+    stream: true
+  });
+
+  // 使用fetch API发送POST请求
+  const response = await fetch('http://localhost:1337/api/strapi-chat', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: postData,
+  });
+
+  // 检查响应是否成功
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  // 使用流式处理响应体
+  const reader = response.body?.getReader();
+  let charsReceived = 0;
+  let data = '';
+
+  // 读取数据流
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) {
+      break;
+    }
+    // 假设服务器使用UTF-8字符编码
+    data += new TextDecoder().decode(value, { stream: true });
+    charsReceived += value.length;
+    console.log(`Received ${charsReceived} characters of data so far`);
+  }
+
+  // 解析JSON数据并返回
+  return JSON.parse(data);
 }

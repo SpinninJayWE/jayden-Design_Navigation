@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 import {useEffect, useRef, useState} from "react";
-import {getSession, sendSessionMessage} from "plugins/service/apis";
+import {getSession, sendMessageStrem, sendSessionMessage} from "plugins/service/apis";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import {Box, Button, InputAdornment, TextField} from "@mui/material";
@@ -26,7 +26,10 @@ export const SessionChatWindow = () => {
   useEffect(() => {
     if (sessionId && sessionId !== 'new') {
         getSession(id!).then(res => {
-          setChat(res.history)
+          if (!res.error) {
+            setChat(res.history ?? [])
+          }
+
         })
     }
   }, []);
@@ -62,6 +65,14 @@ export const SessionChatWindow = () => {
       setMessageLoading(false)
     })
   }
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      // 触发您想要的事件
+      handleSend()
+    }
+  };
   return (
       <Box className={'h-full flex flex-col gap-4'}>
         <div className={'flex-auto overflow-y-scroll'}>
@@ -87,6 +98,7 @@ export const SessionChatWindow = () => {
               onChange={e => {
                 setMessage(e.target.value)
               }}
+              onKeyDown={handleKeyDown}
               value={message}
               InputProps={{
                 endAdornment: (
