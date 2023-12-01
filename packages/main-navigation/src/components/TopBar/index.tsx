@@ -10,6 +10,7 @@ import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../providers/user";
+import {BASE_URL} from "plugins/service";
 const LightSwitch = () => {
   const { activeTheme, setTheme } = useTheme()
   const toggleLight = () => {
@@ -67,7 +68,7 @@ export const TopBar = () => {
                       onClick={() => {
                         nav('/login')
                       }}
-                      src={'https://images.unsplash.com/photo-1559718062-361155fad299?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjJ8fHNhbGVzJTIwTWFuYWdlcnxlbnwwfHwwfHx8MA%3D%3D'} />
+                      src={BASE_URL + user.avatar?.url} />
                   <div className={'pl-4 text-left'}>
                     <Typography component={'p'}>{user.username}</Typography>
                     <Typography component={'p'} color={'text.secondary'}>

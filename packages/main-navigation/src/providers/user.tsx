@@ -10,6 +10,9 @@ interface UserInfo {
   createdAt: string;
   updatedAt: string;
   Followers: string;
+  posting_likes?: any[]
+  postings?: any[]
+  avatar?: { url: string }
 }
 
 // 定义存储在 Context 中的数据类型

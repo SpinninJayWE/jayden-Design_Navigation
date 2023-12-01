@@ -69,6 +69,19 @@ export const getPostingsById = async (id: number, query?: QueryParams) => {
   return res.data;
 }
 
+export const getUserInfo = async () => {
+  const { data } = await request.get(`/users/me?` + toQueryString({
+    populate: {
+      avatar: {
+        fields: ['url']
+      },
+      posting_likes: true,
+      postings: true
+    }
+  }))
+  return data
+}
+
 export const login = async (params: { email: string, password: string }) => {
   const { data } = await  request.post('/auth/local',
       { identifier: params.email, password: params.password }, {

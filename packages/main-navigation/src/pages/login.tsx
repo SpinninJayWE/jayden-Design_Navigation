@@ -6,7 +6,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import {useNavigate} from "react-router-dom";
-import {login} from "plugins/service/apis";
+import {getUserInfo, login} from "plugins/service/apis";
 import {AuthStorage, useAuth} from "../providers/user";
 import {Box, IconButton} from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
@@ -20,6 +20,10 @@ function LoginDialog({ open, handleClose }: any) {
     // 实现登录逻辑
     login({email, password}).then(res => {
       setAuthData(res.jwt, res.user)
+      getUserInfo().then(user => {
+        setAuthData(res.jwt, user)
+        AuthStorage.setUser(user)
+      })
       nav('/')
     })
   };

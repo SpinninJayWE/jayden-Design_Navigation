@@ -1,20 +1,39 @@
-import { useParams } from "react-router-dom"
+import {useNavigate, useParams} from "react-router-dom"
 import {useEffect, useRef, useState} from "react";
 import {getSession, sendMessageStrem, sendSessionMessage} from "plugins/service/apis";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import {Box, Button, InputAdornment, TextField} from "@mui/material";
+import {Avatar, Box, Button, Divider, InputAdornment, ListItemAvatar, TextField, Typography} from "@mui/material";
 import {LoadingButton} from "@mui/lab";
+import ListItemText from "@mui/material/ListItemText";
+import {SendRounded} from "@mui/icons-material";
+import {BASE_URL} from "plugins/service";
+import {useAuth} from "../../providers/user";
+
+function simplifyHistory(history: any[]) {
+  return history.map((item: any) => {
+    // 确定发送者是人类还是AI
+    const sender = item.id && item.id.length && item.id.includes("HumanMessage") ? "You" : "AI";
+
+    // 提取主要信息
+    const content = item.kwargs.content;
+
+    // 返回简化的结构
+    return { sender, content };
+  });
+}
+
 
 export const SessionChatWindow = () => {
   const { id } = useParams()
 
   let [sessionId, setSessionId] = useState<string>(id ?? 'new')
 
+  const { user } = useAuth()
   const [chat, setChat] = useState<any[]>([])
   const [message, setMessage] = useState<string>('')
   const [messageLoading, setMessageLoading] = useState<boolean>(false)
-
+  const nav = useNavigate()
   const messagesEndRef = useRef<any>(null)
 
   const scrollToBottom = () => {
@@ -27,7 +46,9 @@ export const SessionChatWindow = () => {
     if (sessionId && sessionId !== 'new') {
         getSession(id!).then(res => {
           if (!res.error) {
-            setChat(res.history ?? [])
+            setChat(simplifyHistory(res.history) ?? [])
+          } else {
+            nav('/chat/new')
           }
 
         })
@@ -40,9 +61,8 @@ export const SessionChatWindow = () => {
       return [
         ...val,
         {
-          kwargs: {
-            content: message
-          }
+          sender: 'You',
+          content: message
         }
       ]
     })
@@ -53,9 +73,8 @@ export const SessionChatWindow = () => {
         return [
             ...val,
           {
-            kwargs: {
-              content: data.response
-            }
+            sender: 'AI',
+            content: data.response
           }
         ]
       })
@@ -80,9 +99,31 @@ export const SessionChatWindow = () => {
             {
               chat.map((item, index) => {
                 return (
-                    <ListItem key={index}>
-                      {item.kwargs.content}
-                    </ListItem>
+                    <>
+                      {index > 0 && <Divider variant="inset" component="li" />}
+                      <ListItem key={index} alignItems="flex-start">
+                        <ListItemAvatar>
+                          <Avatar
+                              alt="Travis Howard"
+                              src={`${BASE_URL}${item.sender === 'You'? user.avatar?.url : '/uploads/thumbnail_161958ae_498e_4d31_ba9c_67e9fa1c8bf8_d2542c9d63.webp' }`}
+                          />
+                        </ListItemAvatar>
+                        <ListItemText
+                            primary={item.sender}
+                            secondary={
+                              <div className={'mt-2'}>
+                                <Typography
+                                    lineHeight={2}
+                                    variant={'body2'}
+                                    color={'text.primary'}>
+                                  {item.content}
+                                </Typography>
+                              </div>
+                            }
+                        >
+                        </ListItemText>
+                      </ListItem>
+                    </>
                 )
               })
             }
@@ -104,10 +145,13 @@ export const SessionChatWindow = () => {
                 endAdornment: (
                     <InputAdornment position="end">
                       <LoadingButton
+                          variant={'contained'}
+                          disabled={(!message)}
                           loading={messageLoading}
                           onClick={handleSend}
+                          endIcon={<SendRounded />}
                       >
-                        发送
+                        Send
                       </LoadingButton>
                     </InputAdornment>
                 ),
