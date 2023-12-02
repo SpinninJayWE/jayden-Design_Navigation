@@ -36,12 +36,17 @@ export const SessionChatWindow = () => {
   const nav = useNavigate()
   const messagesEndRef = useRef<any>(null)
 
+  const [aiMessage , setAiMessage] = useState<any>({
+    sender: 'AI',
+    content: ''
+  })
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   useEffect(() => {
     scrollToBottom();  // 当 chat 变化时，滚动到底部
-  }, [chat]);  // 依赖项是 chat
+  }, [chat, aiMessage.content]);  // 依赖项是 chat
   useEffect(() => {
     if (sessionId && sessionId !== 'new') {
         getSession(id!).then(res => {
@@ -57,7 +62,12 @@ export const SessionChatWindow = () => {
 
     chatSSEService.onmessage = (e) => {
       const data = JSON.parse(e.data)
-      console.log(data)
+      setAiMessage(val => {
+        return {
+          ...val,
+          content: val.content + data.message
+        }
+      })
     }
 
     return () => {
@@ -76,6 +86,12 @@ export const SessionChatWindow = () => {
           content: message
         }
       ]
+    })
+    setAiMessage(val => {
+      return {
+       ...val,
+        content: ''
+      }
     })
     setMessage('')
     setMessageLoading(true)
@@ -136,7 +152,34 @@ export const SessionChatWindow = () => {
                       </ListItem>
                     </>
                 )
+
               })
+            }
+            {
+                messageLoading && (
+                    <ListItem alignItems="flex-start">
+                      <ListItemAvatar>
+                        <Avatar
+                            alt="Travis Howard"
+                            src={`${BASE_URL}/uploads/thumbnail_161958ae_498e_4d31_ba9c_67e9fa1c8bf8_d2542c9d63.webp }`}
+                        />
+                      </ListItemAvatar>
+                      <ListItemText
+                          primary={aiMessage.sender}
+                          secondary={
+                            <div className={'mt-2'}>
+                              <Typography
+                                  lineHeight={2}
+                                  variant={'body2'}
+                                  color={'text.primary'}>
+                                {aiMessage.content}
+                              </Typography>
+                            </div>
+                          }
+                      >
+                      </ListItemText>
+                    </ListItem>
+                )
             }
             <div ref={messagesEndRef} />
           </List>
