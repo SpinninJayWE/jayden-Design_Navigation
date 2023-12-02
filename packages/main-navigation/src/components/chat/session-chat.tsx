@@ -36,6 +36,9 @@ export const SessionChatWindow = () => {
   const nav = useNavigate()
   const messagesEndRef = useRef<any>(null)
 
+
+
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -53,6 +56,16 @@ export const SessionChatWindow = () => {
 
         })
     }
+    const chatSSEService = new EventSource(`${BASE_URL}/api/strapi-chat-stream/${sessionId}`)
+
+    chatSSEService.onopen = (e) => {
+      console.log('chatSSEService', e)
+    }
+
+    return () => {
+      chatSSEService.close()
+    }
+
   }, []);
 
 
