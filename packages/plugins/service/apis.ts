@@ -149,7 +149,7 @@ export const sendMessageStrem = async (id: string, message: string) => {
   });
 
   // 使用fetch API发送POST请求
-  const response = await fetch('http://localhost:1337/api/strapi-chat', {
+  const response = await fetch('http://localhost:1337/api/chatgpt', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
