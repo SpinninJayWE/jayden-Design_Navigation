@@ -36,7 +36,7 @@ export const SessionList = () => {
 
   return (
       <Box
-          className={'shadow-lg rounded-lg p-4 py-6'}
+          className={'shadow-lg rounded-lg p-4 py-6 overflow-y-auto'}
           sx={{
             width: 220,
             backgroundColor: theme.background.paper
