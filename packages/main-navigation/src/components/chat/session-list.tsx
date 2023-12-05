@@ -1,6 +1,7 @@
 import React, {useEffect, useMemo} from "react";
 import useTheme from "../../hooks/useTheme";
 import {getAllSessions, getSession} from "plugins/service/apis";
+import { getChatList } from "plugins/service/gpt-api";
 import {Tree, TreeNode} from "../TreeList";
 import {Box, Button} from "@mui/material";
 import {useNavigate} from "react-router-dom";
@@ -14,16 +15,19 @@ export const SessionList = () => {
   const treeData = useMemo(() => {
     return sessions.map(item => {
       return {
-        key: item,
-        title: item
+        key: item.sessionId,
+        title: item.title || item.sessionId
       }
     })
   }, [sessions])
 
   useEffect(() => {
-    getAllSessions().then(res => {
+    getChatList().then(res => {
       setSessions(res.data)
     })
+    // getAllSessions().then(res => {
+    //   setSessions(res.data)
+    // })
   }, []);
 
   const handleNodeSeleted = (node: TreeNode) => {

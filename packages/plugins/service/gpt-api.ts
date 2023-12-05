@@ -1,8 +1,13 @@
+import {AuthStorage} from "main-navigation/src/providers/user";
 import request, { BASE_URL } from ".";
 
 
 export const getChatList = () => {
+  return request.get('/chatgpts')
+}
 
+export const getChatSession = (id: string) => {
+  return request.get(`/chatgpt/${id}`)
 }
 
 export const sendChat = async (id: string, message: string, streamCallBack?: (data: { done: boolean, delta: string, snapshot: string }) => void) => {
