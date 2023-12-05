@@ -144,8 +144,7 @@ export const sendMessageStrem = async (id: string, message: string) => {
 // 将数据转换为JSON字符串
   const postData = JSON.stringify({
     sessionId: id,
-    input: message,
-    stream: true
+    input: message
   });
 
   // 使用fetch API发送POST请求
