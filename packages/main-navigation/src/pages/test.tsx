@@ -11,7 +11,7 @@ const TestPage = () => {
         <>
             <Button onClick={() => {
                 sendMessageStrem('11111', '你好吗')
-            }}>send</Button>
+            }}>Send</Button>
         </>
     )
 }

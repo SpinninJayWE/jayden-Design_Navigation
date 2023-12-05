@@ -27,7 +27,7 @@ function simplifyHistory(history: any[]) {
 export const SessionChatWindow = () => {
   const { id } = useParams()
 
-  let [sessionId, setSessionId] = useState<string>(id ?? 'new')
+  const [sessionId, setSessionId] = useState<string>(id ?? 'new')
 
   const { user } = useAuth()
   const [chat, setChat] = useState<any[]>([])
