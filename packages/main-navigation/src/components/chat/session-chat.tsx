@@ -9,9 +9,8 @@ import {
 	Fab,
 	InputAdornment,
 	ListItemAvatar,
-	Slide,
 	TextField,
-	Typography,
+	Typography, Zoom,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import ListItemText from '@mui/material/ListItemText';
@@ -216,11 +215,11 @@ export const SessionChatWindow = () => {
 					}}
 				/>
 			</div>
-      <Slide direction="up" in={!messageEndInView} mountOnEnter unmountOnExit>
+      <Zoom in={!messageEndInView}>
         <Fab 
           sx={{
             position: 'absolute',
-            bottom: 20 + (textFieldRef.current?.clientHeight || 0),
+            bottom: 25 + (textFieldRef.current?.clientHeight || 0),
             right: '50%',
           }}
           size="small"
@@ -230,7 +229,7 @@ export const SessionChatWindow = () => {
           >
           <ArrowDownwardIcon />
         </Fab>
-      </Slide>
+      </Zoom >
 		</Box>
 	);
 };
