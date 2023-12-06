@@ -21,31 +21,7 @@ import { useAuth } from '../../providers/user';
 import { getChatSession, sendChat } from 'plugins/service/gpt-api';
 import useInView from '../../hooks/useInView';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import Markdown from 'react-markdown'
-import {PrismAsyncLight  as SyntaxHighlighter} from 'react-syntax-highlighter'
-import * as styles from 'react-syntax-highlighter/dist/esm/styles/prism'
-
-const MarkDownParser = React.memo(({ content }: {content: string}) => {
-  return <Markdown components={{
-    code(props) {
-      const {children, className, ...rest} = props
-      const match = /language-(\w+)/.exec(className || '')
-      return match ? (
-        <SyntaxHighlighter
-          {...rest}
-          PreTag="div"
-          children={String(children).replace(/\n$/, '')}
-          language={match[1]}
-          style={styles['oneDark']}
-        />
-      ) : (
-        <code {...rest} className={className}>
-          {children}
-        </code>
-      )
-    }
-  }}>{content}</Markdown>
-})
+import MarkDownParser from './markdown_parser';
 
 const ChatItem = React.memo(({ role, message, textLoading }: {role: 'user' | 'assistant', message: string, textLoading?: boolean}) => {
 	const { user } = useAuth();
