@@ -5,11 +5,17 @@ import Markdown from 'react-markdown';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Box, Button, Card, Typography } from '@mui/material';
 import { Components } from 'react-markdown/lib';
+import Highlight from 'react-highlight'
+
 
 const MarkDownParser = React.memo(({ content }: { content: string }) => {
   const components = useMemo<Partial<Components>>(
       () => {
           return {
+            // code (props) {
+            //   return <Highlight {...props} />
+
+            // }
             // code(props: any) {
             //   const { children, className, node, ...rest } = props;
             //   const match = /language-(\w+)/.exec(className || '');
