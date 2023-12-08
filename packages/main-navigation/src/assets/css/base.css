@@ -3,3 +3,44 @@ body, #root {
     font-family: 'Roboto', sans-serif;
     background: #DBDCDE;
 }
+
+
+.fade-enter {
+opacity: 0;
+}
+
+.fade-enter-active {
+opacity: 1;
+transition: opacity 500ms;
+}
+
+.fade-exit {
+opacity: 1;
+}
+
+.fade-exit-active {
+opacity: 0;
+transition: opacity 500ms;
+}
+    
+.slide-enter {
+    transform: translateY(10%);
+    opacity: 0;
+}
+
+.slide-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: transform 300ms ease-in-out;
+}
+
+.slide-exit {
+    opacity: 1;
+    transform: translateX(0);   
+}
+
+.slide-exit-active {
+    opacity: 0;
+    transform: translateX(10%);
+    transition: transform 0ms ease-in-out;
+}

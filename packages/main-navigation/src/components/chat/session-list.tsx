@@ -10,7 +10,6 @@ export const SessionList = () => {
 
   const [sessions, setSessions] = React.useState<any[]>([])
 
-  const { theme } = useTheme()
   const nav = useNavigate()
   const treeData = useMemo(() => {
     return sessions.map(item => {
@@ -25,9 +24,6 @@ export const SessionList = () => {
     getChatList().then(res => {
       setSessions(res.data)
     })
-    // getAllSessions().then(res => {
-    //   setSessions(res.data)
-    // })
   }, []);
 
   const handleNodeSeleted = (node: TreeNode) => {
@@ -40,11 +36,13 @@ export const SessionList = () => {
 
   return (
       <Box
-          className={'shadow-lg rounded-lg p-4 py-6 overflow-y-auto'}
-          sx={{
-            width: 220,
-            backgroundColor: theme.background.paper
-          }}
+          className='overflow-y-auto'
+          bgcolor={'background.paper'}
+          borderRadius={2}
+          boxShadow={5}
+          py={2}
+          px={1}
+          width={220}
       >
         <Button onClick={handleNewChat} variant={'contained'} color={'secondary'} className={'mt-2'} fullWidth>
           New Chat

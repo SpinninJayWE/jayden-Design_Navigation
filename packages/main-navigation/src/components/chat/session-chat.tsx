@@ -21,7 +21,7 @@ import { getChatSession, sendChat } from 'plugins/service/gpt-api';
 import useInView from '../../hooks/useInView';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import MarkDownParser from './markdown_parser';
-import MarkdownPreview from '@uiw/react-markdown-preview';
+import MarkdownPreview from '@uiw/react-markdown-preview/nohighlight';
 
 const ChatItem = React.memo(({ role, message, textLoading }: {role: 'user' | 'assistant', message: string, textLoading?: boolean}) => {
 	const { user } = useAuth();
@@ -44,13 +44,12 @@ const ChatItem = React.memo(({ role, message, textLoading }: {role: 'user' | 'as
         primary={roleComp}
         secondary={
           <div className={'mt-2'}>
-            {/* <Typography
+            <Typography
               lineHeight={2}
               variant={'body2'}
               color={'text.primary'}
-            > */}
-              <MarkdownPreview source={message} />
-              {/* <MarkDownParser content={message} /> */}
+            >
+              <MarkDownParser content={message} />
               {
                 textLoading &&
                   <LoadingButton
@@ -60,7 +59,7 @@ const ChatItem = React.memo(({ role, message, textLoading }: {role: 'user' | 'as
                   >
                   </LoadingButton>
               }
-            {/* </Typography> */}
+            </Typography>
           </div>
         }
       ></ListItemText>

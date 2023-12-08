@@ -58,6 +58,7 @@ export const TreeItem: React.FC<TreeItemProps> = React.memo(({ node, level }) =>
   return (
       <>
         <ListItem
+            className=''
             button
             onClick={handleSelect}
             selected={isSelected}
@@ -72,9 +73,12 @@ export const TreeItem: React.FC<TreeItemProps> = React.memo(({ node, level }) =>
             color: isSelected ? 'white' : '',
             minWidth: '32px'
           }}>{node.icon}</ListItemIcon>}
-          <ListItemText className={`${textColorClass}`} primaryTypographyProps={{
-            fontSize: '14px'
-          }}>
+          <ListItemText
+            className={`${textColorClass} truncate`}
+            primaryTypographyProps={{
+              fontSize: '14px'
+            }}
+          >
             {node.title}
           </ListItemText>
           {node.children ? (open ? <ExpandLess /> : <ExpandMore />) : null}
