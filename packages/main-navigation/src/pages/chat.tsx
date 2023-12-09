@@ -1,5 +1,5 @@
 import {Box, Card} from '@mui/material';
-import SessionList from "../components/chat/session-list";
+import SessionListContainer from "../components/chat/session-list";
 import {Outlet, useLocation, useOutlet} from "react-router-dom";
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 
@@ -7,7 +7,7 @@ export const Chat = () => {
   const { key, pathname } = useLocation()
   return (
       <div className={'h-full flex gap-4'}>
-        <SessionList />
+        <SessionListContainer />
         <Box
             bgcolor={'background.paper'}
             borderRadius={4}

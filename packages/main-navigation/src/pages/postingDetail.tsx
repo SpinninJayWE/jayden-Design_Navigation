@@ -6,7 +6,7 @@ import {
   DialogContent,
   DialogTitle,
   Skeleton,
-  Typography
+  Typography, useMediaQuery, useTheme
 } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import React, {useEffect, useMemo, useState} from "react";
@@ -53,8 +53,11 @@ export const PostingDetail = () =>{
   const image = useMemo(() => {
     return state.cover ? BASE_URL + state.cover.url : state.image
   }, [state.image, state.cover])
+
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   return (
-      <Dialog maxWidth={'lg'} fullWidth={true} open={open} onClose={handleClose}>
+      <Dialog fullScreen={fullScreen} maxWidth={'lg'} fullWidth={true} open={open} onClose={handleClose}>
         {
           loading ?
             <Box className={'w-full'}>
@@ -68,7 +71,7 @@ export const PostingDetail = () =>{
             </Box> :
             <>
               <DialogContent>
-                <Box className={`flex gap-4`}>
+                <Box className={`flex gap-4 ${fullScreen ? 'flex-col' : 'flex-row'}`}>
                   <div>
                     <img className={'max-h-[800px]'} src={image} alt={state.title} />
                   </div>

@@ -1,6 +1,6 @@
 import { BASE_URL, request } from "./index";
 import qs from 'qs'
-import {AuthStorage} from "main-navigation/src/providers/user";
+import {AuthStorage} from "../../main-navigation/src/providers/user";
 import {render} from "nprogress";
 
 type SortParam = string[];

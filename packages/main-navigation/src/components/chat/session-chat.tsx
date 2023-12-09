@@ -4,9 +4,9 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import {
 	Avatar,
-	Box,
+	Box, Button,
 	Divider,
-	Fab,
+	Fab, Hidden, IconButton,
 	InputAdornment,
 	ListItemAvatar,
 	TextField,
@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import ListItemText from '@mui/material/ListItemText';
-import { SendRounded } from '@mui/icons-material';
+import {HistorySharp, SendRounded} from '@mui/icons-material';
 import { BASE_URL } from 'plugins/service';
 import { useAuth } from '../../providers/user';
 import { getChatSession, sendChat } from 'plugins/service/gpt-api';
@@ -30,16 +30,18 @@ const ChatItem = React.memo(({ role, message, textLoading }: {role: 'user' | 'as
   }, [role, user.username])
   return (
     <ListItem alignItems='flex-start'>
-      <ListItemAvatar>
-        <Avatar
-          alt='Travis Howard'
-          src={`${BASE_URL}${
-            role === 'user'
-              ? user.avatar?.url
-              : '/uploads/thumbnail_161958ae_498e_4d31_ba9c_67e9fa1c8bf8_d2542c9d63.webp'
-          }`}
-        />
-      </ListItemAvatar>
+      <Hidden mdDown>
+				<ListItemAvatar>
+					<Avatar
+							alt='Travis Howard'
+							src={`${BASE_URL}${
+									role === 'user'
+											? user.avatar?.url
+											: '/uploads/thumbnail_161958ae_498e_4d31_ba9c_67e9fa1c8bf8_d2542c9d63.webp'
+							}`}
+					/>
+				</ListItemAvatar>
+			</Hidden>
       <ListItemText
         primary={roleComp}
         secondary={
@@ -200,6 +202,13 @@ export const SessionChatWindow = () => {
 					onKeyDown={handleKeyDown}
 					value={message}
 					InputProps={{
+						// startAdornment: (
+						// 	<InputAdornment position={'start'}>
+						// 		<Button size={'small'} color={'primary'}>
+						// 			<HistorySharp />
+						// 		</Button>
+						// 	</InputAdornment>
+						// ),
 						endAdornment: (
 							<InputAdornment position='end'>
 								<LoadingButton

@@ -9,6 +9,7 @@ import '@fontsource/roboto/700.css';
 import { RouterProvider } from 'react-router-dom';
 import router from "./router";
 import {AuthProvider} from "./providers/user";
+import {SideBarProvider} from "./providers/globals";
 
 
 
@@ -16,7 +17,9 @@ function Root () {
 
   return (
       <AuthProvider>
-        <RouterProvider router={router} />
+        <SideBarProvider>
+          <RouterProvider router={router} />
+        </SideBarProvider>
       </AuthProvider>
   )
 }

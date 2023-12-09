@@ -1,19 +1,74 @@
 import {css} from "@emotion/react";
-import {Avatar, Box, Divider} from "@mui/material";
+import {Avatar, Box, Divider, Hidden, SwipeableDrawer, useMediaQuery, useTheme} from "@mui/material";
 import JayLogo from "../../assets/Jay.png";
 import React, {useMemo} from "react";
 import {Tree, TreeNode} from "../TreeList";
 import {ChatBubble, Dashboard, Explore, Forum, LibraryMusic, LocalMall, LocalPlay} from "@mui/icons-material";
 import {useLocation, useNavigate} from 'react-router-dom'
-import useTheme from "../../hooks/useTheme";
+import {useSideBar} from "../../providers/globals";
+import UserInfo from "../user-info";
+
+
+const Menus: React.FC<{
+  treeData: TreeNode[]
+  activeNode: TreeNode | null
+}> = (props) => {
+
+  const { treeData, activeNode } = props
+
+  const nav = useNavigate()
+  const theme = useTheme()
+  const isMdDown = useMediaQuery(theme.breakpoints.down('md'))
+  const { setDrawerOpen } = useSideBar()
+  return (
+      <>
+        <div className={'flex items-center pl-3.5 h-[80px]'}>
+          <Avatar className={'h-[60px]'} alt="Remy Sharp" src={JayLogo} />
+          <span className={'pl-2 text-xl font-bold'}>Jay Design</span>
+        </div>
+        <Divider />
+        <Tree onNodeSelect={(node) => {
+          if (node.path) {
+            // 确保路径以单个斜杠开始
+            nav(node.path);
+            if (isMdDown) {
+              setDrawerOpen(false)
+            }
+          }
+        }} treeData={treeData} customSelectedNode={activeNode}/>
+        <Divider />
+      </>
+  )
+}
+const Drawer: React.FC<{ children: React.ReactNode }> = ({children}) => {
+
+  const { setDrawerOpen, drawerOpen } =  useSideBar()
+
+  return (
+      <SwipeableDrawer
+          anchor={'left'}
+          open={drawerOpen}
+          onClose={() => {
+            setDrawerOpen(false)
+          }}
+          onOpen={() => {
+            setDrawerOpen(true)
+          }}
+      >
+        <div className={'w-[200px]'}>
+          {children}
+          <Hidden smUp>
+            <UserInfo/>
+          </Hidden>
+        </div>
+      </SwipeableDrawer>
+  )
+}
+
 export const SideBar = () => {
 
   const { theme } = useTheme()
 
-  const style = css`
-    width: 200px;
-    background: ${theme.background.paper};
-  `
   const treeData: TreeNode[] = [
     {
       key: '1',
@@ -61,11 +116,7 @@ export const SideBar = () => {
       icon: <Explore />
     },
   ];
-
-  const nav = useNavigate()
-
   const local = useLocation()
-
   const activeNode = useMemo(() => {
     const cur = treeData.find(item => {
       const res = item.path === local.pathname
@@ -78,22 +129,23 @@ export const SideBar = () => {
 
     return null
   }, [local.pathname])
-
   return (
-      <Box css={style} className={`pb-4 overflow-y-scroll shadow-sm sm:display-none`}>
-        <div className={'flex items-center pl-3.5 h-[80px]'}>
-          <Avatar className={'h-[60px]'} alt="Remy Sharp" src={JayLogo} />
-          <span className={'pl-2 text-xl font-bold'}>Jay Design</span>
-        </div>
-        <Divider />
-        <Tree onNodeSelect={(node) => {
-          if (node.path) {
-            // 确保路径以单个斜杠开始
-            nav(node.path);
-          }
-        }} treeData={treeData} customSelectedNode={activeNode}/>
-        <Divider />
-      </Box>
+      <>
+        <Hidden mdDown>
+          <Box
+              width={200}
+              bgcolor={'background.paper'}
+              className={`pb-4 overflow-y-scroll shadow-sm sm:display-none`}
+          >
+            <Menus {...{ treeData, activeNode }} />
+          </Box>
+        </Hidden>
+        <Hidden mdUp>
+          <Drawer>
+            <Menus {...{ treeData, activeNode }} />
+          </Drawer>
+        </Hidden>
+      </>
   );
 }
 

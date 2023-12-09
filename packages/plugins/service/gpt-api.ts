@@ -1,4 +1,4 @@
-import {AuthStorage} from "main-navigation/src/providers/user";
+import {AuthStorage} from "../../main-navigation/src/providers/user";
 import request, { BASE_URL } from ".";
 
 
