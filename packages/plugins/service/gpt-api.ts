@@ -38,10 +38,12 @@ export const sendChat = async (id: string, message: string, streamCallBack?: (da
       const reader = response.body?.getReader();
       let charsReceived = 0;
       let data = { done: false, delta: '', snapshot: '' };
-  
+
+      let index = 0
       if (reader) {
         // 读取数据流
         while (true) {
+          index ++
           const { value, done } = await reader.read();
           if (done) {
             break;
@@ -49,7 +51,12 @@ export const sendChat = async (id: string, message: string, streamCallBack?: (da
           const delta = new TextDecoder().decode(value, { stream: true });
           // 假设服务器使用UTF-8字符编码
           charsReceived += value.length;
-          data = JSON.parse(delta.split('\n').pop() || 'null')
+          try {
+            data = JSON.parse(delta.split('\n').pop() || 'null')
+          } catch {
+            console.error('parse error')
+            continue
+          }
           streamCallBack && streamCallBack(data)
         }
       } else {
@@ -57,5 +64,4 @@ export const sendChat = async (id: string, message: string, streamCallBack?: (da
       }
       resolve(data)
     })
-  
-  }
+}

@@ -155,7 +155,9 @@ export const SessionChatWindow = () => {
       })
       setMessageLoading(false);
 
-    })
+    }).catch(err => {
+			setMessageLoading(false);
+		})
 		setMessage('');
 	};
 
