@@ -6,6 +6,7 @@ import List from '@mui/material/List';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import {ListItemIcon} from "@mui/material";
 import useTheme from "../../hooks/useTheme";
+import {TransitionGroup} from "react-transition-group";
 
 interface TreeProviderProps {
   selectedNode: TreeNode | null | undefined;
@@ -106,6 +107,7 @@ export interface TreeProps {
   treeData: TreeNode[];
   onNodeToggle?: (node: TreeNode) => void;
   onNodeSelect?: (node: TreeNode) => void;
+  animations?: boolean
 }
 
 
@@ -115,7 +117,8 @@ export const Tree: React.FC<TreeProps> = ({
     treeData,
     onNodeToggle,
     onNodeSelect ,
-    customSelectedNode
+    customSelectedNode,
+    animations
   }) => {
   const [selectedNode, setSelectedNode] = useState<TreeNode | null>(null);
 
@@ -129,19 +132,40 @@ export const Tree: React.FC<TreeProps> = ({
     onNodeSelect?.(node); // 调用外部传入的onNodeSelect事件处理器
   };
 
-  const renderTreeItems = (nodes: TreeNode[], level: number = 0): React.ReactNode => {
-    return nodes.map((node) => (
+  const renderTreeItem = (node: TreeNode, level: number = 0): React.ReactNode => {
+    return (
         <TreeItem
             key={node.key}
             node={node}
-            level={0}
+            level={level}
         />
+    );
+  };
+
+  const renderTreeItems = (nodes: TreeNode[], level: number = 0): React.ReactNode => {
+    return nodes.map((node) => (
+      renderTreeItem(node, level)
     ));
   };
 
   return (
       <TreeProvider.Provider value={{ selectedNode: customSelectedNode ?? selectedNode, handleNodeSelect, handleNodeToggle }}>
-        <List>{renderTreeItems(treeData)}</List>
+        <List>
+          {
+            animations ?
+              <TransitionGroup>
+                {
+                  treeData.map(item => (
+                    <Collapse key={item.key}>
+                      {renderTreeItem(item,  0)}
+                    </Collapse>
+                  ))
+                }
+              </TransitionGroup>
+              :
+              renderTreeItems(treeData)
+          }
+        </List>
       </TreeProvider.Provider>
   );
 };

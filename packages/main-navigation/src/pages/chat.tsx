@@ -15,20 +15,16 @@ export const Chat = () => {
             position='relative'
             overflow={'hidden'}
           >
-           {/* <SwitchTransition>
-              <CSSTransition
-                key={pathname}
-                timeout={400}
-                classNames="slide"
-                unmountOnExit
-              >
-              {(state) => {
-                return ( */}
-                <Outlet key={pathname}/>
-                {/* )
-              }} */}
-            {/* </CSSTransition>
-          </SwitchTransition> */}
+          <SwitchTransition>
+            <CSSTransition
+              key={pathname}
+              timeout={200}
+              classNames="fade"
+              unmountOnExit
+            >
+              <Outlet key={pathname}/>
+            </CSSTransition>
+          </SwitchTransition>
         </Box>
       </div>
   );

@@ -1,10 +1,17 @@
 import React, {useEffect, useMemo, useState} from "react";
 import { getChatList } from "plugins/service/gpt-api";
 import {Tree, TreeNode} from "../TreeList";
-import {Box, Button, ButtonGroup, Fab, Hidden, IconButton, SwipeableDrawer, useMediaQuery} from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  Fab, Fade,
+  Hidden, Skeleton,
+  SwipeableDrawer,
+  useMediaQuery
+} from "@mui/material";
 import {useNavigate} from "react-router-dom";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import {ChatBubbleOutline, FeaturedPlayList, HistorySharp, Refresh} from "@mui/icons-material";
+import { HistorySharp, Refresh} from "@mui/icons-material";
 import {LoadingButton} from "@mui/lab";
 import {css} from "@emotion/react";
 import useTheme from "../../hooks/useTheme";
@@ -12,6 +19,8 @@ import useTheme from "../../hooks/useTheme";
 export const SessionList = ({setDrawerOpen} : any) => {
 
   const [sessions, setSessions] = React.useState<any[]>([])
+
+  const [loading, setLoading] = React.useState<boolean>(false)
 
   const nav = useNavigate()
   const treeData = useMemo(() => {
@@ -24,8 +33,23 @@ export const SessionList = ({setDrawerOpen} : any) => {
   }, [sessions])
 
   const fetchData = () => {
+    if (sessions.length === 0) {
+      setLoading(true)
+    }
+    const startTime = Date.now(); // 获取请求开始时间
     getChatList().then(res => {
       setSessions(res.data)
+    }).finally(() => {
+      if (sessions.length > 0) return
+      const endTime = Date.now(); // 获取请求结束时间
+      const requestTime = endTime - startTime; // 计算请求时间
+      if (requestTime < 500) {
+        setTimeout(() => {
+          setLoading(false)
+        }, 500 - requestTime)
+      } else {
+        setLoading(false)
+      }
     })
   }
 
@@ -82,23 +106,39 @@ export const SessionList = ({setDrawerOpen} : any) => {
   return (
       <Box
           className='flex flex-col overflow-hidden'
-          py={2}
           width={220}
           {...boxStyle}
       >
         <Box
-            px={1}
+            px={2}
+            py={2}
         >
           <Button size={'small'} onClick={handleNewChat} variant={'contained'} color={'secondary'} fullWidth>
             New Chat
           </Button>
-          <Button size={'small'} startIcon={<Refresh/>} sx={{marginTop: 1}} color={'info'} onClick={fetchData} variant={'contained'} fullWidth>
-            Refresh
-          </Button>
+          <LoadingButton loading={loading} size={'small'} startIcon={<Refresh/>} sx={{marginTop: 1}} color={'info'} onClick={fetchData} variant={'contained'} fullWidth>
+            Refresh List
+          </LoadingButton>
         </Box>
-        <div css={chatListStyle} className={'overflow-y-auto'}>
-          <Tree onNodeSelect={handleNodeSeleted} treeData={treeData} />
-        </div>
+        <Divider />
+        {
+          !loading ?
+            <Box css={chatListStyle} className={'overflow-y-auto'} sx={{
+              transform: 'translateZ(0)'
+            }}>
+              <Tree animations={true} onNodeSelect={handleNodeSeleted} treeData={treeData} />
+            </Box>
+            :
+            <div className={'p-3 flex flex-col gap-2 flex-1 justify-center'}>
+              {
+                Array.from({length: 18}).map((item, idx) => {
+                  return (
+                    <Skeleton key={idx} variant={'rectangular'} animation="wave" className={'flex-1'}  />
+                  )
+                })
+              }
+            </div>
+        }
       </Box>
   )
 }
