@@ -135,11 +135,11 @@ export const Tree: React.FC<TreeProps> = ({
 
   const renderTreeItem = (node: TreeNode, level: number = 0): React.ReactNode => {
     return (
-        <TreeItem
-            key={node.key}
-            node={node}
-            level={level}
-        />
+      <TreeItem
+        key={node.key}
+        node={node}
+        level={level}
+      />
     );
   };
 
@@ -171,7 +171,7 @@ export const Tree: React.FC<TreeProps> = ({
   );
 };
 
-export type ListsOnClickFunc =  (params : { key: string | number, text: string }) => void
+export type ListItemInstanceCallBack<T = void> =  (params : { key: string | number, text: string }) => T
 interface ListsProps {
   // 动画
   animations?: boolean;
@@ -184,7 +184,8 @@ interface ListsProps {
     key?: string
   };
   itemProps ?: {
-    onItemClick?: ListsOnClickFunc;
+    onItemClick?: ListItemInstanceCallBack;
+    customActionNode?: ListItemInstanceCallBack<ReactNode>
   }
 }
 interface ListItemProps extends Pick<ListsProps, 'fields' | 'activeKey' |'itemProps'>{
@@ -194,26 +195,33 @@ const _ListItem: React.FC<ListItemProps> = (props) =>{
 
   const { itemData, fields, activeKey, itemProps } = props
 
-  const { onItemClick } = itemProps ?? {}
+  const { onItemClick, customActionNode } = itemProps ?? {}
   const text = useMemo(() =>{
     return fields?.title? itemData[fields.title] : itemData.title ?? ''
   }, [itemData, fields])
   const key = useMemo(() =>{
     return fields?.key? itemData[fields.key] : itemData.key ?? ''
   }, [itemData, fields])
+  const isSelected = useMemo(() =>{
+    return key === activeKey
+  }, [key, activeKey])
   const { theme } = useTheme()
   return (
     <ListItemButton
       onClick={() =>{
         onItemClick && onItemClick({ text, key })
       }}
-      selected={key === activeKey}
+      selected={isSelected}
     >
       <ListItemText primaryTypographyProps={{
-        fontSize: '14px'
+        fontSize: '14px',
+        noWrap: true
       }}>
         {text}
       </ListItemText>
+      {
+        (customActionNode && isSelected) && customActionNode({ text, key })
+      }
     </ListItemButton>
   )
 }

@@ -1,19 +1,50 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import { getChatList } from "plugins/service/gpt-api";
-import {Lists, ListsOnClickFunc, Tree, TreeNode} from "../TreeList";
+import {Lists, ListItemInstanceCallBack, Tree, TreeNode} from "../TreeList";
 import {
   Box,
   Button,
   Divider,
   Fab, Fade,
-  Hidden, Skeleton,
-  SwipeableDrawer,
+  Hidden, IconButton, Menu, MenuItem, Popover, Skeleton,
+  SwipeableDrawer, Typography,
   useMediaQuery
 } from "@mui/material";
 import {useLocation, useNavigate, useParams, useSearchParams} from "react-router-dom";
-import { HistorySharp, Refresh} from "@mui/icons-material";
+import {HistorySharp, MoreHoriz, Refresh} from "@mui/icons-material";
 import {LoadingButton} from "@mui/lab";
 import useTheme from "../../hooks/useTheme";
+
+
+const CustomAction: React.FC<any> = ({ key, text, onAction }) => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  return (
+    <>
+      <IconButton size={'small'} onClick={handleClick}>
+        <MoreHoriz />
+      </IconButton>
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <MenuItem onClick={handleClose}>My account</MenuItem>
+        <MenuItem onClick={handleClose}>Logout</MenuItem>
+      </Menu>
+    </>
+  )
+}
 
 export const SessionList = ({setDrawerOpen} : any) => {
 
@@ -60,7 +91,7 @@ export const SessionList = ({setDrawerOpen} : any) => {
     }
   }, [urlParamsSessionId])
 
-  const handleNodeSelected: ListsOnClickFunc = ({ text, key }) => {
+  const handleNodeSelected: ListItemInstanceCallBack = ({ text, key }) => {
     nav('/chat/' + key)
     if (isMdDown) {
       setDrawerOpen(false)
@@ -80,7 +111,9 @@ export const SessionList = ({setDrawerOpen} : any) => {
    {}
   }, [isMdDown])
 
-  const { theme } = useTheme()
+  const customActionNode: ListItemInstanceCallBack<React.ReactNode> = ({ text, key } )=> {
+    return <CustomAction {...{text, key}} />
+  }
 
   return (
       <Box
@@ -105,7 +138,8 @@ export const SessionList = ({setDrawerOpen} : any) => {
             <Lists
               activeKey={activeSessionKey}
               itemProps={{
-                onItemClick: handleNodeSelected
+                onItemClick: handleNodeSelected,
+                customActionNode
               }}
               list={sessions}
               fields={{ title: 'title', key: 'sessionId' }}
