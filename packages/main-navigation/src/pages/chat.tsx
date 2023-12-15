@@ -1,6 +1,6 @@
 import {Box, Card} from '@mui/material';
 import SessionListContainer from "../components/chat/session-list";
-import {Outlet, useLocation, useOutlet} from "react-router-dom";
+import {Outlet, useLocation, useOutlet, useParams} from "react-router-dom";
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 
 export const Chat = () => {

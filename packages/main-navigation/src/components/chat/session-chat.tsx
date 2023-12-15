@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import {useNavigate, useParams, useSearchParams} from 'react-router-dom';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -22,6 +22,7 @@ import useInView from '../../hooks/useInView';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import MarkDownParser from './markdown_parser';
 import MarkdownPreview from '@uiw/react-markdown-preview/nohighlight';
+import {css} from "@emotion/react";
 
 const ChatItem = React.memo(({ role, message, textLoading }: {role: 'user' | 'assistant', message: string, textLoading?: boolean}) => {
 	const { user } = useAuth();
@@ -88,7 +89,6 @@ export const SessionChatWindow = () => {
 		role: 'assistant',
 		content: '',
 	});
-
   const textFieldRef = useRef<HTMLDivElement>(null);
 
   const messageEndInView = useInView(messagesEndRef)
@@ -143,6 +143,11 @@ export const SessionChatWindow = () => {
     }).then((res: any) => {
       if (sessionId === 'new' && res.newSessionId) {
         setSessionId(res.newSessionId)
+				setTimeout(() => {
+					nav(`/chat/${res.newSessionId}`, {
+						replace: true
+					})
+				}, 200)
       }
       setChat((val) => {
         return [
@@ -168,11 +173,16 @@ export const SessionChatWindow = () => {
 			handleSend();
 		}
 	};
+
+	const scrollContainerStyles = css`
+		transform: translateZ(0);
+		will-change: transform;
+	`
 	return (
 		<Box className={'h-full flex flex-col gap-4 overflow-hidden'} sx={{
       position: 'relative'
     }}>
-			<div className={'flex-auto overflow-y-scroll'}>
+			<div css={scrollContainerStyles} className={'flex-auto overflow-y-scroll'}>
 				<List>
 					{chat.map((item, index) => {
 						return (
@@ -204,13 +214,6 @@ export const SessionChatWindow = () => {
 					onKeyDown={handleKeyDown}
 					value={message}
 					InputProps={{
-						// startAdornment: (
-						// 	<InputAdornment position={'start'}>
-						// 		<Button size={'small'} color={'primary'}>
-						// 			<HistorySharp />
-						// 		</Button>
-						// 	</InputAdornment>
-						// ),
 						endAdornment: (
 							<InputAdornment position='end'>
 								<LoadingButton

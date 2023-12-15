@@ -4,9 +4,10 @@ import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
 import List from '@mui/material/List';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import {ListItemIcon} from "@mui/material";
+import {Box, ListItemButton, ListItemIcon} from "@mui/material";
 import useTheme from "../../hooks/useTheme";
 import {TransitionGroup} from "react-transition-group";
+import {css} from "@emotion/react";
 
 interface TreeProviderProps {
   selectedNode: TreeNode | null | undefined;
@@ -169,3 +170,119 @@ export const Tree: React.FC<TreeProps> = ({
       </TreeProvider.Provider>
   );
 };
+
+export type ListsOnClickFunc =  (params : { key: string | number, text: string }) => void
+interface ListsProps {
+  // 动画
+  animations?: boolean;
+  list: any[];
+  width?: number | string;
+  height?: number | string;
+  activeKey?: string;
+  fields?: {
+    title?: string
+    key?: string
+  };
+  itemProps ?: {
+    onItemClick?: ListsOnClickFunc;
+  }
+}
+interface ListItemProps extends Pick<ListsProps, 'fields' | 'activeKey' |'itemProps'>{
+  itemData: any
+}
+const _ListItem: React.FC<ListItemProps> = (props) =>{
+
+  const { itemData, fields, activeKey, itemProps } = props
+
+  const { onItemClick } = itemProps ?? {}
+  const text = useMemo(() =>{
+    return fields?.title? itemData[fields.title] : itemData.title ?? ''
+  }, [itemData, fields])
+  const key = useMemo(() =>{
+    return fields?.key? itemData[fields.key] : itemData.key ?? ''
+  }, [itemData, fields])
+  const { theme } = useTheme()
+  return (
+    <ListItemButton
+      onClick={() =>{
+        onItemClick && onItemClick({ text, key })
+      }}
+      selected={key === activeKey}
+    >
+      <ListItemText primaryTypographyProps={{
+        fontSize: '14px'
+      }}>
+        {text}
+      </ListItemText>
+    </ListItemButton>
+  )
+}
+
+const ListsItem = React.memo(_ListItem)
+export const Lists: React.FC<ListsProps> = (props) =>{
+
+  const {
+    width,
+    animations,
+    list, height,
+    fields,
+    activeKey,
+    itemProps
+  } = props
+
+  const renderItems = (list:any[]) =>{
+    return (
+        animations ?
+          <TransitionGroup>
+            {
+              list.map((item, index) => {
+                const key = fields?.key? item[fields.key] : index
+                return <Collapse key={key}>
+                  <ListsItem itemData={item} fields={fields} activeKey={activeKey} itemProps={itemProps} />
+                </Collapse>
+              })
+            }
+          </TransitionGroup>
+          :
+          list.map((item, index) => {
+            const key = fields?.key? item[fields.key] : index
+            return <ListsItem key={key} itemData={item} fields={fields} activeKey={activeKey} itemProps={itemProps} />
+          })
+    )
+  }
+
+  const { theme } = useTheme()
+
+  const styles = css`
+    width: ${width? width : 'auto'};
+    height: ${height ? height : 'auto'};
+    overflow-y: auto;
+    transform: translateZ(0);
+    /* 修改滚动条的样式 */
+    ::-webkit-scrollbar {
+      width: 4px; /* 设置滚动条的宽度 */
+    }
+
+    /* 为滚动条轨道添加背景颜色 */
+    ::-webkit-scrollbar-track {
+      background-color: ${theme.background.paper};
+    }
+
+    /* 为滚动条添加滑块的样式 */
+    ::-webkit-scrollbar-thumb {
+      background-color: ${theme.border};
+    }
+
+    /* 鼠标移入滚动条时的样式 */
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #555;
+    }
+  `
+  return (
+    <Box css={styles}>
+      <List>
+        {renderItems(list)}
+      </List>
+    </Box>
+  )
+}
