@@ -104,7 +104,9 @@ export const SessionList = ({setDrawerOpen} : any) => {
           !loading ?
             <Lists
               activeKey={activeSessionKey}
-              onItemClick={handleNodeSelected}
+              itemProps={{
+                onItemClick: handleNodeSelected
+              }}
               list={sessions}
               fields={{ title: 'title', key: 'sessionId' }}
               animations={true}
