@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import { getChatList } from "plugins/service/gpt-api";
+import {deleteSession, getChatList} from "plugins/service/gpt-api";
 import {Lists, ListItemInstanceCallBack, Tree, TreeNode} from "../TreeList";
 import {
   Box,
@@ -16,7 +16,7 @@ import {LoadingButton} from "@mui/lab";
 import useTheme from "../../hooks/useTheme";
 
 
-const CustomAction: React.FC<any> = ({ key, text, onAction }) => {
+const CustomAction: React.FC<any> = ({ sessionId, fetchData, nav }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -24,6 +24,24 @@ const CustomAction: React.FC<any> = ({ key, text, onAction }) => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleAction = async (e:  React.MouseEvent<HTMLElement>, action: string) => {
+    e.stopPropagation();
+    let res = {}
+    switch (action) {
+      case 'edit':
+        break
+      case 'delete':
+        res = await deleteSession(sessionId)
+          fetchData()
+          nav('/chat/new', {replace: true})
+        break
+      default:
+        break
+    }
+
+    handleClose();
   };
   return (
     <>
@@ -38,9 +56,8 @@ const CustomAction: React.FC<any> = ({ key, text, onAction }) => {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem disabled onClick={(e) => handleAction(e, 'edit')}>Edit</MenuItem>
+        <MenuItem onClick={(e) => handleAction(e, 'delete')}>Delete</MenuItem>
       </Menu>
     </>
   )
@@ -112,7 +129,7 @@ export const SessionList = ({setDrawerOpen} : any) => {
   }, [isMdDown])
 
   const customActionNode: ListItemInstanceCallBack<React.ReactNode> = ({ text, key } )=> {
-    return <CustomAction {...{text, key}} />
+    return <CustomAction {...{text, sessionId: key, fetchData, nav}} />
   }
 
   return (

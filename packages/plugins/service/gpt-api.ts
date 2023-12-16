@@ -65,3 +65,7 @@ export const sendChat = async (id: string, message: string, streamCallBack?: (da
       resolve(data)
     })
 }
+
+export const deleteSession = (id: string) => {
+  return request.delete(`/chatgpt/${id}`)
+}
